@@ -30,6 +30,7 @@ class Controller extends BaseController
         $path = $file->store('uploads', ['disk' => 'public']);
         return $path;
     }
+
     private function validateFiles(UploadedFile $file, Request $request)
     {
         $validator = Validator::make($request->all(), [

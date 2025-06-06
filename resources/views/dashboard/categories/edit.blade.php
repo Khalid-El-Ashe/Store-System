@@ -10,7 +10,7 @@
     @csrf
     @method('PUT')
 
-    @include('dashboard.categories._edit')
+    @include('dashboard.form._edit')
 </form>
 
 @endsection

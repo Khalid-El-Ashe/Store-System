@@ -15,23 +15,24 @@
     </div>
     <div class="card-body">
         <div class="form-group">
-            <label for="">Categoy Name</label>
-            <input type="text" @class(['form-control', 'is-invalid'=> $errors->has('name')])
+            <x-form.input label="Category Name" type="text" name="name" value="{{$category->name}}"
+                placeholder="category name" />
+            {{-- <input type="text" @class(['form-control', 'is-invalid'=> $errors->has('name')])
             @if (old('name')) value="{{ old('name') }}" @else value="{{ old('name', $category->name ?? null) }}" @endif
-            value="" name="name"
-            id="name"
-            placeholder="category name">
+            name="name" id="name" placeholder="category name">
             @error('name')
             <div class="invalid-feedback">
                 {{ $message }}
             </div>
-            @enderror
+            @enderror --}}
         </div>
 
         <div class="form-group">
-            <label for="">Categoy Description</label>
+            <x-form.textarea label="Categoy Description" type="text" name="description"
+                value="{{$category->description}}" />
+            {{-- <label for="">Categoy Description</label>
             <textarea class="form-control form-control-lg" type="text" name="description" id="description"
-                placeholder="category desciption....">{{$category->description}}</textarea>
+                placeholder="category desciption....">{{$category->description}}</textarea> --}}
         </div>
         <div class="form-group">
             <label>Select</label>
@@ -57,22 +58,24 @@
                 class="mt-2 rounded">
         </div>
         <div class="form-group clearfix">
-            <div class="icheck-primary d-inline">
+            <x-form.radio name="status" checked="{{$category->status}}"
+                :options="['active' => 'Active', 'archived' => 'Archived']" />
+            {{-- <div class="icheck-primary d-inline">
                 <input type="radio" id="status_active" name="status" value="active" @checked(old('status',
                     $category->status ??
                 '') == 'active')>
                 <label for="status_active">
                     Active
                 </label>
-            </div>
-            <div class="icheck-primary d-inline">
+            </div> --}}
+            {{-- <div class="icheck-primary d-inline">
                 <input type="radio" id="status_archived" name="status" value="archived" @checked(old('status',
                     $category->status
                 ?? '') == 'archived')>
                 <label for="status_archived">
                     Archived
                 </label>
-            </div>
+            </div> --}}
         </div>
     </div>
     <!-- /.card-body -->

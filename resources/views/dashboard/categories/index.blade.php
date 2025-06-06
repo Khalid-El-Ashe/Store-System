@@ -15,14 +15,9 @@
     <a href="{{route('categories.create')}}" class="btn bg-olive active">Add Category</a>
 </div>
 
-@if (session()->has('success'))
-<div class="toast bg-info fade show" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header"><strong class="mr-auto">Toast Title</strong><small>Subtitle</small><button
-            data-dismiss="toast" type="button" class="ml-2 mb-1 close" aria-label="Close"><span
-                aria-hidden="true">×</span></button></div>
-    <div class="toast-body">{{session('success')}}</div>
-</div>
-@endif
+{{-- @component('components.alert') --}}
+<x-alert type="success" />
+<!--- this component i added it --->
 
 <table class="table">
     <thead>

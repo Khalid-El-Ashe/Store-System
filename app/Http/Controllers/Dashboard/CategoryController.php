@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,6 +22,9 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
+        // i need to use the pagination
+        // $categories = Category::paginate(10);
+
         return view('dashboard.categories.index', ['categories' => $categories]);
     }
 
@@ -89,15 +93,16 @@ class CategoryController extends Controller
         // ]);
 
         // in here you can to write your validations
-        $request->validate([
-            'name' => 'required|string|min:5|max:100',
-            'slug' => Str::slug($request->post('name')),
-            'description' => 'nullable|string|min:20|max:255',
-            'image' => 'mimes:jpeg,jpg,png,gif|max:1000',
-            'status' => 'require|in:active,archived',
-            'parent_id' => 'nullable|int|exists:categories,id',
-        ]);
+        // $request->validate([
+        //     'name' => 'required|string|min:5|max:100',
+        //     'slug' => Str::slug($request->post('name')),
+        //     'description' => 'nullable|string|min:20|max:255',
+        //     'image' => 'mimes:jpeg,jpg,png,gif|max:1000',
+        //     'status' => 'require|in:active,archived',
+        //     'parent_id' => 'nullable|int|exists:categories,id',
+        // ]);
 
+        $request->validate(Category::validation($request));
         $request->merge([
             'slug' => Str::slug($request->post('name'))
         ]);
@@ -152,17 +157,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // $request->validate([
+        //     'name' => "required|string|min:5|max:100|unique:categories,name,$id",
+        //     'description' => 'nullable|string|min:20|max:255',
+        //     'image' => 'nullable|mimes:jpeg,jpg,png,gif|max:1000',
+        //     'status' => 'required|in:active,archived',
+        //     'parent_id' => 'nullable|int|exists:categories,id',
+        // ]);
 
-        // in here you can to write your validations
-        $request->validate([
-            'name' => 'required|string|min:5|max:100',
-            'slug' => Str::slug($request->post('name')), // هذا السطر ليس قاعدة تحقق، بل قيمة!
-            'description' => 'nullable|string|min:20|max:255',
-            'image' => 'nullable|mimes:jpeg,jpg,png,gif|max:1000',
-            'status' => 'required|in:active,archived',
-            'parent_id' => 'nullable|int|exists:categories,id',
-        ]);
-
+        $request->validate(Category::validation($request, $id));
         $category = Category::findOrFail($id);
 
         $old_image = $category->image;
@@ -183,6 +186,7 @@ class CategoryController extends Controller
         // $category->fill($request->all())->save();
         return redirect()->route('categories.index');
     }
+
 
     /**
      * Remove the specified resource from storage.

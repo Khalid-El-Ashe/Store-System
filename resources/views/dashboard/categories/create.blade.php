@@ -10,7 +10,7 @@
 <form action="{{route('categories.store')}}" method="post" enctype="multipart/form-data">
     @csrf
 
-    @include('dashboard.categories._create')
+    @include('dashboard.form._create')
 </form>
 
 @endsection

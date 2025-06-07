@@ -19,6 +19,28 @@
 <x-alert type="success" />
 <!--- this component i added it --->
 
+<form action="{{URL::current()}}" method="get" class="d-flex justify-content-between mb-4 mx-2">
+    {{-- <div class="input-group">
+        <input type="search" class="form-control form-control-lg" placeholder="Type your keywords here">
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-lg btn-default">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div> --}}
+
+    <x-form.input name="name" placeholder="Name" :value="request('name')" />
+    <select name="status" class="form-control mx-2">
+        <option value="">All</option>
+        <option value="active" @selected(request('status'=='active' ))>Active</option>
+        <option value="archived" @selected(request('status'=='archived' ))>Archived</option>
+    </select>
+    <span class="input-group-append">
+        <button type="submit" class="btn btn-info btn-flat">Filter</button>
+    </span>
+    {{-- <button class="btn btn-primary"></button> --}}
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -26,6 +48,7 @@
             <th>Image</th>
             <th>Name</th>
             <th>Parent</th>
+            <th>Status</th>
             <th>Created At</th>
             <th>Action</th>
         </tr>
@@ -42,9 +65,21 @@
                 <img src="{{ asset('storage/broken-image.png')}}" class="rounded-circle" width="50" height="50">
                 @endif
             </td>
+
             <td>{{$category->name}}</td>
-            <td>{{$category->parent_id}}</td>
+
+            <td>{{$category->parent_name}}</td>
+
+            <td>
+                @if ($category->status == 'active')
+                <span class="badge bg-primary">active</span>
+                @else
+                <span class="badge bg-warning">archived</span>
+                @endif
+            </td>
+
             <td>{{$category->created_at}}</td>
+
             <td>
                 <div class="btn-group">
                     <a href="{{ route('categories.edit', $category->id) }}"
@@ -100,6 +135,9 @@
 
     </tbody>
 </table>
+
+{{-- this is to get the Pagination style if i have it --}}
+{{ $categories->withQueryString()->links('pagination::bootstrap-5') }}
 
 @endsection
 

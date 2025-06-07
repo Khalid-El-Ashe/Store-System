@@ -12,18 +12,23 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    // this function for the policy
-    // طبعا هاي الدالة على مستوى الكلاس كله بدون الحاجة للذهاب لكل دالة ووضع فيها الصلاحية
-    public function __construct()
-    {
-        // $this->authorizeResource(Category::class, 'category');
-    }
-
     public function index()
     {
-        $categories = Category::all();
-        // i need to use the pagination
-        // $categories = Category::paginate(10);
+        $request = request();
+        // $categories = Category::paginate(2);
+
+        // get the parent name by join
+
+
+        // i need to use my Scope Model
+        $categories = Category::leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
+            ->select([
+                'categories.*',
+                'parents.name as parent_name'
+            ])
+            ->filter($request->query())
+            ->latest() // طبعا هان تريب وفلترة الاحدث فالاقدم وممكن التخصيص حسب الحقل
+            ->paginate(2);
 
         return view('dashboard.categories.index', ['categories' => $categories]);
     }
@@ -40,69 +45,9 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        // DB::insert('insert into categories (name, slug, description, image, status, parent_id, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?)', [
-        //     'Phones',
-        //     '1597532',
-        //     null,
-        //     null,
-        //     'active',
-        //     null,
-        //     now(),
-        //     now()
-        // ]);
-
-        // DB::create([
-        //     'name' => 'require|string|min:8|max:100',
-        //     'description' => 'require|string|min:10|max:255',
-        //     'status' => 'require|in:active,archived'
-        //.....
-        // ]);
-
-        // code the DB Builder
-
-        // $path = null;
-        // if ($request->hasFile('image')) {
-        //     $path = $request->file('image')->store('uploads', 'public');
-        // }
-        // DB::table('categories')->insert([
-        //     'name'        => $request->get('name'),
-        //     'slug'        => Str::slug($request->post('name')),
-        //     'description' => $request->get('description'),
-        //     'image'       => $path,
-        //     'status'      => $request->get('status') ?: null,
-        //     'parent_id'   => $request->get('parent_id'),
-        //     'created_at'  => now(),
-        //     'updated_at'  => now(),
-        // ]);
-
-
-        // // code Elequent ORM Database
-        // $path = null;
-        // if ($request->hasFile('image')) {
-        //     $path = $request->file('image')->store('uploads', 'public');
-        // }
-        // Category::create([
-        //     'name'        => $request->get('name'),
-        //     'slug'        => Str::slug($request->post('name')),
-        //     'description' => $request->get('description'),
-        //     'image'       => $path,
-        //     'status'      => $request->get('status') ?: null,
-        //     'parent_id'   => $request->get('parent_id'),
-        // ]);
-
-        // in here you can to write your validations
-        // $request->validate([
-        //     'name' => 'required|string|min:5|max:100',
-        //     'slug' => Str::slug($request->post('name')),
-        //     'description' => 'nullable|string|min:20|max:255',
-        //     'image' => 'mimes:jpeg,jpg,png,gif|max:1000',
-        //     'status' => 'require|in:active,archived',
-        //     'parent_id' => 'nullable|int|exists:categories,id',
-        // ]);
-
-        $request->validate(Category::validation($request));
+        // $request->validate(Category::validation($request));
         $request->merge([
             'slug' => Str::slug($request->post('name'))
         ]);
@@ -155,17 +100,9 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CategoryRequest $request, string $id)
     {
-        // $request->validate([
-        //     'name' => "required|string|min:5|max:100|unique:categories,name,$id",
-        //     'description' => 'nullable|string|min:20|max:255',
-        //     'image' => 'nullable|mimes:jpeg,jpg,png,gif|max:1000',
-        //     'status' => 'required|in:active,archived',
-        //     'parent_id' => 'nullable|int|exists:categories,id',
-        // ]);
-
-        $request->validate(Category::validation($request, $id));
+        // $request->validate(Category::validation($request, $id));
         $category = Category::findOrFail($id);
 
         $old_image = $category->image;

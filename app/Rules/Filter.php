@@ -16,6 +16,9 @@ class Filter implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        ! in_array(strtolower($value), $this->blackList);
+        if (in_array(strtolower($value), array_map('strtolower', $this->blackList))) {
+            $fail("The {$attribute} contains a forbidden word.");
+        }
+        // ! in_array(strtolower($value), $this->blackList);
     }
 }

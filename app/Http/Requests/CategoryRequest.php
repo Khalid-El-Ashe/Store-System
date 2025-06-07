@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Filter;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryRequest extends FormRequest
@@ -25,15 +26,19 @@ class CategoryRequest extends FormRequest
         $id = $this->route('category');
 
         // Blacklist example for custom rule, commented out for now
-        // $blackLists = ['laravel', 'admin', 'manager', 'user', 'language'];
+        $blackLists = ['laravel', 'admin', 'manager', 'user', 'language'];
 
         return [
-            'name' => "required|string|min:5|max:100|unique:categories,name,$id",
+            // 'name' => "required|string|min:5|max:100|unique:categories,name,$id",
             // You can uncomment and use your custom Filter rule if implemented
-            // 'name' => [
-            //     'required', 'string', 'min:5', 'max:100', "unique:categories,name,$id",
-            //     new Filter($blackLists)
-            // ],
+            'name' => [
+                'required',
+                'string',
+                'min:5',
+                'max:100',
+                "unique:categories,name,$id",
+                new Filter($blackLists)
+            ],
             'description' => 'nullable|string|min:20|max:255',
             'image' => 'nullable|mimes:jpeg,jpg,png,gif,svg,webp|max:1000',
             'status' => 'required|in:active,archived',
@@ -62,23 +67,3 @@ class CategoryRequest extends FormRequest
         ];
     }
 }
-
-
-
-           // 'name' => "required|string|min:5|max:100|unique:categories,name,$id",
-           // // 'name' => "required|string|min:5|max:100|unique:categories,name,$id|filter:$blackLists",
-           // // [
-           // // "required|string|min:5|max:100|unique:categories,name,$id",
-           // // // function ($attribute, $value, $fails) {
-           // // // // في هذا البلوك في هاي الكليجر يتم عمل بلاك لست من الاسماء الممنوع استخدامها في حقل الاسم
-           // // // if (strtolower($value) == 'laravel' || strtolower($value) == 'admin' || strtolower($value) == 'manager') {
-           // // // $fails('This name is can not used');
-           // // // }
-           // // // }
-           // // new Filter(['laravel', 'admin', 'manager'])
-           // // ], // unique:categories,name if the database have same name do not save it and send message to user
-           // // 'slug' => Str::slug($request->post('name')),
-           // 'description' => 'nullable|string|min:20|max:255',
-           // 'image' => 'nullable|mimes:jpeg,jpg,png,gif|max:1000',
-           // 'status' => 'required|in:active,archived',
-           // 'parent_id' => 'nullable|int|exists:categories,id',

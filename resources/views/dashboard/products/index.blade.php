@@ -62,8 +62,8 @@
 
             <td>{{$product->name}}</td>
 
-            <td>{{$product->category_id}}</td>
-            <td>{{$product->store_id}}</td>
+            <td>{{$product->category->name}}</td>
+            <td>{{$product->store->name}}</td>
 
             <td>
                 @if ($product->status == 'active')
@@ -96,38 +96,6 @@
         </tr>
 
         @endforelse
-
-        {{-- @if ($products->count()) --}}
-        {{-- @foreach ($products as $product)
-        <tr>
-            <td></td>
-            <td>{{$product->id}}</td>
-            <td>{{$product->name}}</td>
-            <td>{{$product->parent_id}}</td>
-            <td>{{$product->created_at}}</td>
-            <td>
-                <a href="{{ route('products.edit') }}" class="btn btn-block btn-outline-success btn-sm">Edit</a>
-            </td>
-            <td>
-                <form action="{{route('products.destroy')}}" method="post">
-                    @csrf
-                    {{-- <input type="hidden" name="_method" value="delete"> --}}
-                    {{-- @method('delete')
-                    <button type="submit" class="btn btn-block btn-outline-warning btn-sm">
-                        Delete
-                    </button>
-                </form>
-            </td>
-        </tr> --}}
-        {{-- @endforeach --}}
-        {{-- @else --}}
-        {{-- <tr>
-            <td>
-                no products defined!
-            </td>
-        </tr> --}}
-        {{-- @endif --}}
-
     </tbody>
 </table>
 

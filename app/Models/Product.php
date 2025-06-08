@@ -13,6 +13,15 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
+    // the Product model hasOne Category model i need to make this relation
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+    public function store() {
+        return $this->belongsTo(Store::class, 'store_id', 'id');
+    }
+
     protected static function booted()
     {
         // in here i need to make and use Global Scope

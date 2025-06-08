@@ -7,8 +7,10 @@ use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class CategoryController extends Controller
 {
@@ -21,11 +23,20 @@ class CategoryController extends Controller
 
 
         // i need to use my Scope Model
-        $categories = Category::leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
-            ->select([
-                'categories.*',
-                'parents.name as parent_name'
-            ])
+        $categories = Category::with('parent')
+            // leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
+            //     ->select([
+            //         'categories.*',
+            //         'parents.name as parent_name'
+            //     ])
+            // ->select('categories.*')
+            // ->selectRaw('(select count(*) from products where category_id = categories.id) as products_count')
+            // ->select(DB::raw('(select count(*) from products where category_id = category.id) as products_count'))
+            ->withCount('products')
+            ->withCount(['products as products_number' => function ($query) {
+                // (select count(*) from products where and status = 'active' and category_id = categories.id) as products_count
+                $query->where('status', '=', 'active');
+            }])
             ->filter($request->query())
             ->latest() // طبعا هان تريب وفلترة الاحدث فالاقدم وممكن التخصيص حسب الحقل
             // ->withTrashed()
@@ -66,9 +77,9 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Category $category)
     {
-        //
+        return view('dashboard.categories.show', ['category' => $category]);
     }
 
     /**

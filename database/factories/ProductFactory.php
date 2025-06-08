@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Category;
 use App\Models\Store;
+use Bezhanov\Faker\Provider\Commerce;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -19,7 +20,9 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->unique()->words(2, true);
+        $this->faker->addProvider(new Commerce($this->faker));
+
+        $name = $this->faker->unique()->productName;
         return [
             'name' => $name,
             'slug' => Str::slug($name . '-' . uniqid()),

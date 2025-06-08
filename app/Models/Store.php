@@ -13,4 +13,10 @@ class Store extends Model
     // protected $primaryKey = 'id'; // but this line is default found in Model class
     // public $incrementing = true; // this mean is the primaryKey is autoincrement
     // public $timestamps = true;
+
+    // i have the relation store has many products
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'store_id', 'id');
+    }
 }

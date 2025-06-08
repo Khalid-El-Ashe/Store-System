@@ -41,6 +41,7 @@
             <th>Image</th>
             <th>Name</th>
             <th>Parent</th>
+            <th>Parent Count</th>
             <th>Status</th>
             <th>Created At</th>
             <th colspan="2">Action</th>
@@ -59,9 +60,11 @@
                 @endif
             </td>
 
-            <td>{{$category->name}}</td>
+            <td><a href="{{route('categories.show', $category->id)}}"><span
+                        class="badge bg-primary">{{$category->name}}</span></a></td>
 
-            <td>{{$category->parent_name}}</td>
+            <td>{{$category->parent->name}}</td>
+            <td>{{$category->products_number}}</td>
 
             <td>
                 @if ($category->status == 'active')

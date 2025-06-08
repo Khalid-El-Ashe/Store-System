@@ -19,6 +19,22 @@ class Category extends Model
     // and if you need to protect the elements and you have mores you can to use guarded
     // protected $guarded = []; // you do not need to add anything this array brackets
 
+
+    // the Category has many Products so i need to make relation
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id', 'id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id', 'id')->withDefault(['name' => 'no parent']);
+    }
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id', 'id');
+    }
+
     public function scopeActive(Builder $builder)
     {
         $builder->where('status', '=', 'active');

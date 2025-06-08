@@ -28,8 +28,12 @@ class CategoryController extends Controller
             ])
             ->filter($request->query())
             ->latest() // طبعا هان تريب وفلترة الاحدث فالاقدم وممكن التخصيص حسب الحقل
-            ->paginate(2);
+            // ->withTrashed()
+            // ->onlyTrashed()
+            ->paginate(10);
 
+        // $categories = Category::onlyTrashed(); // get the categories just is trashed
+        // $categories = Category::withTrashed(); // get the categories and get the trashed
         return view('dashboard.categories.index', ['categories' => $categories]);
     }
 
@@ -134,10 +138,34 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->delete();
 
+        // if ($category->image) {
+        //     Storage::disk('public')->delete($category->image);
+        // }
+
+        return redirect()->route('categories.index');
+    }
+
+    public function trash()
+    {
+        $categories = Category::onlyTrashed()->paginate(2);
+        return view('dashboard.categories.trash', ['categories' => $categories]);
+    }
+
+    public function restore($id)
+    {
+        $category = Category::onlyTrashed()->find($id); // i need to find the $id from the trashed categories
+        $category->restore();
+        return redirect()->route('categories.trash')->with('success', 'Category is Restored');
+    }
+
+    public function forceDelete($id)
+    {
+        $category = Category::onlyTrashed()->findOrFail($id); // i need to find the $id from the trashed categories
+        $category->forceDelete();
+
         if ($category->image) {
             Storage::disk('public')->delete($category->image);
         }
-
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.trash')->with('success', 'Category is Deleted');
     }
 }

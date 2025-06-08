@@ -4,16 +4,16 @@
 <link rel="stylesheet" href="{{asset('plugins/toastr/toastr.min.css')}}">
 @endsection
 
-@section('title', 'Categories')
+@section('title', 'Products')
 @section('breadcrumb')
 @parent
-<li class="breadcrumb-item active">Categories</li>
+<li class="breadcrumb-item active">Products</li>
 @endsection
 @section('content')
 
 <div class="mb-5">
-    <a href="{{route('categories.create')}}" class="btn bg-olive active">Add Category</a>
-    <a href="{{route('categories.trash')}}" class="btn bg-olive active">Trashes Categories</a>
+    <a href="{{route('products.create')}}" class="btn bg-olive active">Add Product</a>
+    {{-- <a href="{{route('products.trash')}}" class="btn bg-olive active">Trashes products</a> --}}
 </div>
 
 {{-- @component('components.alert') --}}
@@ -40,7 +40,8 @@
             <th>ID</th>
             <th>Image</th>
             <th>Name</th>
-            <th>Parent</th>
+            <th>Category</th>
+            <th>Store</th>
             <th>Status</th>
             <th>Created At</th>
             <th colspan="2">Action</th>
@@ -48,36 +49,37 @@
     </thead>
     <tbody>
 
-        @forelse ($categories as $category)
+        @forelse ($products as $product)
         <tr>
-            <td>{{$category->id}}</td>
+            <td>{{$product->id}}</td>
             <td>
-                @if ($category->image)
-                <img src="{{ asset('storage/'.$category->image) }}" class="rounded-circle" width="50" height="50">
+                @if ($product->image)
+                <img src="{{ asset('storage/'.$product->image) }}" class="rounded-circle" width="50" height="50">
                 @else
                 <img src="{{ asset('storage/broken-image.png')}}" class="rounded-circle" width="50" height="50">
                 @endif
             </td>
 
-            <td>{{$category->name}}</td>
+            <td>{{$product->name}}</td>
 
-            <td>{{$category->parent_name}}</td>
+            <td>{{$product->category_id}}</td>
+            <td>{{$product->store_id}}</td>
 
             <td>
-                @if ($category->status == 'active')
+                @if ($product->status == 'active')
                 <span class="badge bg-primary">active</span>
                 @else
                 <span class="badge bg-warning">archived</span>
                 @endif
             </td>
 
-            <td>{{$category->created_at}}</td>
+            <td>{{$product->created_at}}</td>
 
             <td>
                 <div class="btn-group">
-                    <a href="{{ route('categories.edit', $category->id) }}"
+                    <a href="{{ route('products.edit', $product->id) }}"
                         class="btn btn-block btn-outline-success btn-sm">Edit</a>
-                    <form action="{{route('categories.destroy', $category->id)}}" method="post">
+                    <form action="{{route('products.destroy', $product->id)}}" method="post">
                         @csrf
                         {{-- <input type="hidden" name="_method" value="delete"> --}}
                         @method('delete')
@@ -90,24 +92,24 @@
         </tr>
         @empty
         <tr>
-            <th>no Categories defined!</th>
+            <th>no products defined!</th>
         </tr>
 
         @endforelse
 
-        {{-- @if ($categories->count()) --}}
-        {{-- @foreach ($categories as $category)
+        {{-- @if ($products->count()) --}}
+        {{-- @foreach ($products as $product)
         <tr>
             <td></td>
-            <td>{{$category->id}}</td>
-            <td>{{$category->name}}</td>
-            <td>{{$category->parent_id}}</td>
-            <td>{{$category->created_at}}</td>
+            <td>{{$product->id}}</td>
+            <td>{{$product->name}}</td>
+            <td>{{$product->parent_id}}</td>
+            <td>{{$product->created_at}}</td>
             <td>
-                <a href="{{ route('categories.edit') }}" class="btn btn-block btn-outline-success btn-sm">Edit</a>
+                <a href="{{ route('products.edit') }}" class="btn btn-block btn-outline-success btn-sm">Edit</a>
             </td>
             <td>
-                <form action="{{route('categories.destroy')}}" method="post">
+                <form action="{{route('products.destroy')}}" method="post">
                     @csrf
                     {{-- <input type="hidden" name="_method" value="delete"> --}}
                     {{-- @method('delete')
@@ -121,7 +123,7 @@
         {{-- @else --}}
         {{-- <tr>
             <td>
-                no Categories defined!
+                no products defined!
             </td>
         </tr> --}}
         {{-- @endif --}}
@@ -130,7 +132,7 @@
 </table>
 
 {{-- this is to get the Pagination style if i have it --}}
-{{ $categories->withQueryString()->links('pagination::bootstrap-5') }}
+{{ $products->withQueryString()->links('pagination::bootstrap-5') }}
 
 @endsection
 

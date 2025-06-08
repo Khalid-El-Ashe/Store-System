@@ -4,17 +4,16 @@
 <link rel="stylesheet" href="{{asset('plugins/toastr/toastr.min.css')}}">
 @endsection
 
-@section('title', 'Categories')
+@section('title', 'Categories Trashed')
 @section('breadcrumb')
 @parent
-<li class="breadcrumb-item active">Categories</li>
+<li class="breadcrumb-item active">Categories Trashed</li>
 @endsection
 @section('content')
 
-<div class="mb-5">
+{{-- <div class="mb-5">
     <a href="{{route('categories.create')}}" class="btn bg-olive active">Add Category</a>
-    <a href="{{route('categories.trash')}}" class="btn bg-olive active">Trashes Categories</a>
-</div>
+</div> --}}
 
 {{-- @component('components.alert') --}}
 <x-alert type="success" />
@@ -22,16 +21,18 @@
 
 <form action="{{URL::current()}}" method="get" class="d-flex justify-content-between mb-4 mx-2">
 
+
     <x-form.input name="name" placeholder="Name" :value="request('name')" />
     <select name="status" class="form-control mx-2">
         <option value="">All</option>
-        <option value="active" @selected(request('status'=='active' ))>Active</option>
-        <option value="archived" @selected(request('status'=='archived' ))>Archived</option>
+        <option value="active" @selected(request('status')=='active' )>Active</option>
+        <option value="archived" @selected(request('status')=='archived' )>Archived</option>
     </select>
     <span class="input-group-append">
         <button type="submit" class="btn btn-info btn-flat">Filter</button>
     </span>
     {{-- <button class="btn btn-primary"></button> --}}
+
 </form>
 
 <table class="table">
@@ -40,9 +41,8 @@
             <th>ID</th>
             <th>Image</th>
             <th>Name</th>
-            <th>Parent</th>
             <th>Status</th>
-            <th>Created At</th>
+            <th>Deleted At</th>
             <th colspan="2">Action</th>
         </tr>
     </thead>
@@ -61,8 +61,6 @@
 
             <td>{{$category->name}}</td>
 
-            <td>{{$category->parent_name}}</td>
-
             <td>
                 @if ($category->status == 'active')
                 <span class="badge bg-primary">active</span>
@@ -71,18 +69,25 @@
                 @endif
             </td>
 
-            <td>{{$category->created_at}}</td>
+            <td>{{$category->deleted_at}}</td>
 
             <td>
                 <div class="btn-group">
-                    <a href="{{ route('categories.edit', $category->id) }}"
-                        class="btn btn-block btn-outline-success btn-sm">Edit</a>
-                    <form action="{{route('categories.destroy', $category->id)}}" method="post">
+                    <form action="{{route('categories.restore', $category->id)}}" method="post">
+                        @csrf
+                        {{-- <input type="hidden" name="_method" value="delete"> --}}
+                        @method('put')
+                        <button type="submit" class="btn btn-block btn-outline-success btn-sm">
+                            Restore
+                        </button>
+                    </form>
+
+                    <form action="{{route('categories.force-delete', $category->id)}}" method="post">
                         @csrf
                         {{-- <input type="hidden" name="_method" value="delete"> --}}
                         @method('delete')
                         <button type="submit" class="btn btn-block btn-outline-warning btn-sm">
-                            Delete
+                            Force-Delete
                         </button>
                     </form>
                 </div>
@@ -94,38 +99,6 @@
         </tr>
 
         @endforelse
-
-        {{-- @if ($categories->count()) --}}
-        {{-- @foreach ($categories as $category)
-        <tr>
-            <td></td>
-            <td>{{$category->id}}</td>
-            <td>{{$category->name}}</td>
-            <td>{{$category->parent_id}}</td>
-            <td>{{$category->created_at}}</td>
-            <td>
-                <a href="{{ route('categories.edit') }}" class="btn btn-block btn-outline-success btn-sm">Edit</a>
-            </td>
-            <td>
-                <form action="{{route('categories.destroy')}}" method="post">
-                    @csrf
-                    {{-- <input type="hidden" name="_method" value="delete"> --}}
-                    {{-- @method('delete')
-                    <button type="submit" class="btn btn-block btn-outline-warning btn-sm">
-                        Delete
-                    </button>
-                </form>
-            </td>
-        </tr> --}}
-        {{-- @endforeach --}}
-        {{-- @else --}}
-        {{-- <tr>
-            <td>
-                no Categories defined!
-            </td>
-        </tr> --}}
-        {{-- @endif --}}
-
     </tbody>
 </table>
 

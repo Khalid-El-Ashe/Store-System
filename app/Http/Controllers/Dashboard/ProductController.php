@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         // $products = Product::withoutGlobalScope('store')->paginate();
@@ -19,49 +18,56 @@ class ProductController extends Controller
         return view('dashboard.products.index', ['products' => $products]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Product $product)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product, $id)
+    public function edit(Product $product)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::findOrFail($product->id);
+        $tags = implode(',', $product->tags()->pluck('name')->toArray());
+        return view('dashboard.products.edit', ['product' => $product, 'tags' => $tags]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Product $product)
     {
-        //
+        $product->update($request->except('tags'));
+
+        $tags = json_decode(',', $request->post('tags'));
+        $tag_ids = [];
+
+        $saved_tags = Tag::all();
+        foreach ($tags as $item) {
+            $slug = Str::slug($item->value);
+            // $tag = Tag::where('slug', $slug)->first();
+            $tag = $saved_tags->where('slug', $slug)->first();
+
+            if (!$tag) {
+                $tag = Tag::create([
+                    'name' => $item->value,
+                    'slug' => $slug
+                ]);
+            }
+
+            $tag_ids[] = $tag->id;
+        }
+
+        $product->tags()->sync($tag_ids);
+
+        return redirect()->route('products.index')->with('success', 'تم تحديث المنتج بنجاح');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product)
     {
         //

@@ -16,15 +16,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(5)->create();
+        \App\Models\User::factory(5)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
 
-        // Category::factory(50)->create();
-        // Store::factory(50)->create();
+        Category::factory(50)->create();
+        Store::factory(50)->create();
         Product::factory(150)->create();
 
         // in here i need to add my seeders class

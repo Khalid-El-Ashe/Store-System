@@ -7,7 +7,8 @@
     <select name="category_id" class="form-control form-select">
         <option value="">Primary Category</option>
         @foreach (App\Models\Category::all() as $category)
-        <option value="{{$category->id}}" @selected(old('category_id', $product->category_id))>{{ $category->name }}
+        <option value="{{ $category->id }}" @selected(old('category_id', $product->category_id) == $category->id)>
+            {{ $category->name }}
         </option>
         @endforeach
     </select>
@@ -20,13 +21,15 @@
 
 <div class="form-group">
     <label for="image">Choose Image</label>
-    <x-form.input type="file" name="image" accept="image/*" />
-    <img id="preview-image" src="#" alt="Selected Image" style="display: none; max-height: 150px;" class="mt-2 rounded">
+    <x-form.input type="file" name="image" accept="image/*" onchange="previewImage(event)" />
+    <img id="preview-image" src="{{ asset('storage/' . $product->image) }}" alt="Selected Image"
+        style="max-height: 150px;" class="mt-2 rounded" @if (!$product->image) style="display:none" @endif>
 </div>
 
 <div class="form-group">
     <x-form.input label="Price" name="price" :value="$product->price" />
 </div>
+
 <div class="form-group">
     <x-form.input label="Tags" name="tags" :value="$tags" />
 </div>
@@ -44,14 +47,25 @@
 </div>
 
 @push('styles')
-<link href="{{asset('css/tagify.css')}}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css">
 @endpush
 
 @push('scripts')
-<script src="{{asset('js/tagify.js')}}"></script>
-<script src="{{asset('js/tagify.polyfills.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
 <script>
-    var inputElm = document.querySelector('[name=tags]');
-            tagify = new Tagify (inputElm);
+    // Initialize Tagify
+        const inputElm = document.querySelector('[name=tags]');
+        const tagify = new Tagify(inputElm);
+
+        // Image preview function
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const output = document.getElementById('preview-image');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
 </script>
 @endpush

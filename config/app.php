@@ -72,6 +72,9 @@ return [
 
     'timezone' => 'Asia/Gaza',
 
+    // i need to add my Default Currency
+    'currency' => 'USD', // This is the default currency for the application, you can change it to any other currency like 'EUR', 'GBP', etc.
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
@@ -185,6 +188,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Currency' => App\Helpers\Currency::class,
     ])->toArray(),
 
 ];

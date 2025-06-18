@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use PhpParser\Node\Expr\Cast\String_;
 
 class ProductController extends Controller
 {

@@ -27,7 +27,7 @@ class ProductFactory extends Factory
             'name' => $name,
             'slug' => Str::slug($name . '-' . uniqid()),
             'description' => $this->faker->sentence(20),
-            'image' => $this->faker->imageUrl(800, 600),
+            'image' => 'https://picsum.photos/seed/' . uniqid() . '/800/600',
             'price' => $this->faker->randomFloat(2, 2, 499),
             'compare_price' => $this->faker->randomFloat(2, 200, 1000),
             'category_id' => Category::inRandomOrder()->first()->id, //Category::factory(),

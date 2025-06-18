@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Front\HomeContrller;
+use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,9 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeContrller::class, 'index'])->name('home');
 
 // Route::prefix('/')->group(function () {
 //     Route::resource('dashboard', DashboardController::class);
@@ -27,6 +27,10 @@ Route::get('/dash', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/products', [ProductsController::class, 'index'])->name('product.index');
+Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('product.show');
+Route::get('/products/search', [ProductsController::class, 'search'])->name('product.search');
+Route::get('/products/filter', [ProductsController::class, 'filter'])->name('product.filter');
 
 Route::middleware('auth')->group(function () {
     // Route::resource('/profile', ProfileController::class);

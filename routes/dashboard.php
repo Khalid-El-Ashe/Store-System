@@ -4,10 +4,13 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
+use App\Http\Middleware\CheckUserType;
 use Illuminate\Support\Facades\Route;
 
 
-Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () {
+// CeheckUserType this is class middleware is created by me to handle user type
+// and redirect to login if user is not authenticated or
+Route::prefix('dashboard')->middleware(['auth', 'auth.type:admin,super-admin'])->group(function () {
     Route::resource('/', DashboardController::class);
     // soft deletes
     Route::get('categories/trashed', [CategoryController::class, 'trash'])->name('categories.trash');

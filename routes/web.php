@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\HomeContrller;
 use App\Http\Controllers\Front\ProductsController;
 use Illuminate\Support\Facades\Route;
@@ -25,10 +26,10 @@ Route::get('/dash', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/products', [ProductsController::class, 'index'])->name('product.index');
-Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('product.show');
-Route::get('/products/search', [ProductsController::class, 'search'])->name('product.search');
-Route::get('/products/filter', [ProductsController::class, 'filter'])->name('product.filter');
+Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
+Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show');
+Route::get('/products/search', [ProductsController::class, 'search'])->name('products.search');
+Route::get('/products/filter', [ProductsController::class, 'filter'])->name('products.filter');
 
 Route::middleware('auth')->group(function () {
     // Route::resource('/profile', ProfileController::class);
@@ -36,6 +37,8 @@ Route::middleware('auth')->group(function () {
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::resource('cart', CartController::class);
 
 Route::post('/paypal/webhook', function () {
     echo 'Webhook received';

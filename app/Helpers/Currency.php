@@ -7,6 +7,14 @@ use NumberFormatter;
 // this class is Helper class for Curreny
 class Currency // i build this class to handle currency formatting and conversion
 {
+
+    // i need to make magic method to call the format method directly
+    // يعني باختصار هذه الدالة بتخلي الكلاس كدالة
+    public function __invoke(...$params)
+    {
+        return static::format(...$params);
+    }
+
     /**
      * Format the given amount to a currency string.
      *

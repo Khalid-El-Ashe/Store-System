@@ -54,10 +54,10 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CartRepository $repository, $id)
+    public function destroy($id)
     {
         // $product = Product::findOrFail($id);
-        $repository->delete($id);
+        $this->repository->delete($id);
         // return redirect()->route('cart.index')->with('success', 'Product removed from cart successfully.');
     }
 }

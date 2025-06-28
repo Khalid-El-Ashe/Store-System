@@ -20,7 +20,9 @@ class CartModelRepository implements CartRepository
      */
     public function get(): Collection
     {
-        return Cart::with('product')->where('cookie_id', '=', $this->getCookieId())->get();
+        return Cart::with('product')
+            // ->where('cookie_id', '=', $this->getCookieId()) // i need to add this condition into GlobalScop
+            ->get();
     }
 
     /**
@@ -33,59 +35,57 @@ class CartModelRepository implements CartRepository
 
         // i need to check if the product already exists in the cart, so if is exists, i will update the quantity
         $existingCartItem = Cart::where('product_id', $product->id)
-            ->where('cookie_id', '=', $this->getCookieId())
+            // ->where('cookie_id', '=', $this->getCookieId()) // this line is was Global in Scope Model Class
             ->first();
 
         if (!$existingCartItem) {
-            Cart::create([
-                'cookie_id' => $this->getCookieId(),
-                'user_id' => auth()->id(),
-                'product_id' => $product->id,
-                'quantity' => $quantity,
-            ]);
+            $existingCartItem->increment('quantity', $quantity);
+            return $existingCartItem;
+
+            // Cart::create([
+            //     // 'cookie_id' => $this->getCookieId(), // i need to add the cookie_id by event in the CartObserve method created
+            //     'user_id' => auth()->id(),
+            //     'product_id' => $product->id,
+            //     'quantity' => $quantity,
+            // ]);
         }
 
-        return $existingCartItem->increment('quantity', $quantity);
+        Cart::create([
+            // 'cookie_id' => $this->getCookieId(), // i need to add the cookie_id by event in the CartObserve method created
+            'user_id' => auth()->id(),
+            'product_id' => $product->id,
+            'quantity' => $quantity,
+        ]);
+        // return $existingCartItem->increment('quantity', $quantity);
     }
 
     public function update(Product $product, $quantity)
     {
         Cart::where('product_id', $product->id)
-            ->where('cookie_id', '=', $this->getCookieId())
+            // ->where('cookie_id', '=', $this->getCookieId()) // this line is was Global in Scope Model Class
             ->update(['quantity' => $quantity]);
     }
 
     public function delete($id)
     {
         Cart::where('id', $id)
-            ->where('cookie_id', '=', $this->getCookieId())
+            // ->where('cookie_id', '=', $this->getCookieId()) // this line is was Global in Scope Model Class
             ->delete();
     }
 
     public function empty()
     {
-        Cart::where('cookie_id', '=', $this->getCookieId())->delete();
+        Cart::
+            // where('cookie_id', '=', $this->getCookieId())-> // this line is was Global in Scope Model Class
+            query()->delete();
     }
 
     public function total(): float
     {
-        return (float) Cart::where('cookie_id', '=', $this->getCookieId())
-            ->join('products', 'carts.product_id', '=', 'products.id')
+        return (float) Cart::
+            // where('cookie_id', '=', $this->getCookieId()) // this line is was Global in Scope Model Class
+            join('products', 'carts.product_id', '=', 'products.id')
             ->selectRaw('SUM(products.price * carts.quantity) as total')
             ->value('total') ?? 0.0;
-    }
-
-    protected function getCookieId(): string
-    {
-        // this function to get the cookie id
-        // if the cookie id is not set, i will make a new one
-        $cookieId = Cookie::get('cart_id');
-
-        if (!$cookieId) {
-            $cookieId = Str::uuid();
-            // set the cookie for 30 days and i need to use the Carbon native php class to use DateTime
-            Cookie::queue('cart_id', $cookieId, 60 * 24 * 30);
-        }
-        return $cookieId;
     }
 }

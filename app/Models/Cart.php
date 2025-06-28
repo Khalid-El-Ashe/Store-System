@@ -3,15 +3,17 @@
 namespace App\Models;
 
 use App\Observers\CartObserver;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
 class Cart extends Model
 {
     use HasFactory;
 
-    public $incrementing = false;
+    public $incrementing = false; // this is to do not make the id is autoincrement
 
     protected $fillable = [
         'cookie_id',
@@ -26,30 +28,49 @@ class Cart extends Model
     // deleting, deleted, restoring, restored, retrieved, booted
 
     // i need to use the observer listener
-    public static function boot()
+    public static function booted()
     {
-        parent::boot();
-
+        // parent::boot();
         // this function is inject into the model
         // when the model is created
         // i need to make the uuid
         // so i need to use the creating event
-        // static::creating(function (Cart $cart) {
+        // static::creating(function (Cart $cart) // this is observe function
+        // {
         //     // in the first i need to make the uuid
         //     $cart->id = Str::uuid();
         // });
-
         static::observe(CartObserver::class);
+
+        // اريد ان اعمل هذه الدالة العامة لانها تتكرر في كثير من الكود بالتالي عملته لنظافة الكود Clean Coding
+        static::addGlobalScope('cookie_id', function (Builder $builder) {
+            $builder->where('cookie_id', '=', Cart::getCookieId());
+        });
     }
 
     // i need to build my relashinships
+    public function user()
+    {
+        return $this->belongsTo(User::class)->withDefault('name', 'Anonymous');
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
-    public function user()
+
+    public static function  getCookieId(): string
     {
-        return $this->belongsTo(User::class)->withDefault('name', 'Anonymous');
+        // this function to get the cookie id
+        // if the cookie id is not set, i will make a new one
+        $cookieId = Cookie::get('cart_id');
+
+        if (!$cookieId) {
+            $cookieId = Str::uuid();
+            // set the cookie for 30 days and i need to use the Carbon native php class to use DateTime
+            Cookie::queue('cart_id', $cookieId, 60 * 24 * 30);
+        }
+        return $cookieId;
     }
 }

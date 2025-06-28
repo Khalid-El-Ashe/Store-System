@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Cart;
+use Illuminate\Support\Str;
 
 // php artisan make:observer CartObserver --model=Cart
 class CartObserver
@@ -12,7 +13,8 @@ class CartObserver
      */
     public function creating(Cart $cart): void
     {
-        $cart->id = \Illuminate\Support\Str::uuid();
+        $cart->id = Str::uuid();
+        $cart->cookie_id = Cart::getCookieId();
     }
 
     /**

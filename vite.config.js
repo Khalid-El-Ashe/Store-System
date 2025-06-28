@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                'resources/js/cart.js' // this file js i well be created
             ],
             refresh: true,
         }),

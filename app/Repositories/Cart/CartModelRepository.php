@@ -13,6 +13,12 @@ use Illuminate\Support\Str;
 // this class to can i use the CartRepository interface functions (Implementation functions)
 class CartModelRepository implements CartRepository
 {
+    protected $items;
+    public function __construct()
+    {
+        $this->items = collect([]);
+    }
+
     /**
      * Get all items in the cart.
      *
@@ -20,9 +26,13 @@ class CartModelRepository implements CartRepository
      */
     public function get(): Collection
     {
-        return Cart::with('product')
-            // ->where('cookie_id', '=', $this->getCookieId()) // i need to add this condition into GlobalScop
-            ->get();
+        // in here i need check if the items is emplty add add data in the items
+        if (!$this->items->count()) {
+            $this->items = Cart::with('product')
+                // ->where('cookie_id', '=', $this->getCookieId()) // i need to add this condition into GlobalScop
+                ->get();
+        }
+        return $this->items;
     }
 
     /**
@@ -41,13 +51,6 @@ class CartModelRepository implements CartRepository
         if (!$existingCartItem) {
             $existingCartItem->increment('quantity', $quantity);
             return $existingCartItem;
-
-            // Cart::create([
-            //     // 'cookie_id' => $this->getCookieId(), // i need to add the cookie_id by event in the CartObserve method created
-            //     'user_id' => auth()->id(),
-            //     'product_id' => $product->id,
-            //     'quantity' => $quantity,
-            // ]);
         }
 
         Cart::create([
@@ -59,9 +62,9 @@ class CartModelRepository implements CartRepository
         // return $existingCartItem->increment('quantity', $quantity);
     }
 
-    public function update(Product $product, $quantity)
+    public function update($id, $quantity)
     {
-        Cart::where('product_id', $product->id)
+        Cart::where('id', $id)
             // ->where('cookie_id', '=', $this->getCookieId()) // this line is was Global in Scope Model Class
             ->update(['quantity' => $quantity]);
     }
@@ -82,10 +85,14 @@ class CartModelRepository implements CartRepository
 
     public function total(): float
     {
-        return (float) Cart::
-            // where('cookie_id', '=', $this->getCookieId()) // this line is was Global in Scope Model Class
-            join('products', 'carts.product_id', '=', 'products.id')
-            ->selectRaw('SUM(products.price * carts.quantity) as total')
-            ->value('total') ?? 0.0;
+        // return (float) Cart::
+        //     // where('cookie_id', '=', $this->getCookieId()) // this line is was Global in Scope Model Class
+        //     join('products', 'carts.product_id', '=', 'products.id')
+        //     ->selectRaw('SUM(products.price * carts.quantity) as total')
+        //     ->value('total') ?? 0.0;
+
+        return $this->get()->sum(function ($item) {
+            return $item->quantity * $item->product->price;
+        });
     }
 }

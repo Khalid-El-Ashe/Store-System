@@ -38,14 +38,14 @@ class CartController extends Controller
         $this->repository->add($product, $request->post('quantity'));
 
         // i need to use ajax(jQuery) to return the response
-        if ($request->exceptJson()) {
-            return response()->json(['message' => 'Item added to cart'], Response::HTTP_CREATED);
-        } else {
-            return response()->json(
-                ['message' => 'Item is not added to cart found error'],
-                Response::HTTP_BAD_REQUEST
-            );
-        }
+        // if ($request->exceptJson()) {
+        //     return response()->json(['message' => 'Item added to cart'], Response::HTTP_CREATED);
+        // } else {
+        //     return response()->json(
+        //         ['message' => 'Item is not added to cart found error'],
+        //         Response::HTTP_BAD_REQUEST
+        //     );
+        // }
 
         return redirect()->route('cart.index')->with('success', 'Product added to cart successfully.');
     }

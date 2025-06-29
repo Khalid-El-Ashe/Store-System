@@ -49,17 +49,16 @@ class CartModelRepository implements CartRepository
             ->first();
 
         if (!$existingCartItem) {
-            $existingCartItem->increment('quantity', $quantity);
-            return $existingCartItem;
+            $cart =  Cart::create([
+                // 'cookie_id' => $this->getCookieId(), // i need to add the cookie_id by event in the CartObserve method created
+                'user_id' => auth()->id(),
+                'product_id' => $product->id,
+                'quantity' => $quantity,
+            ]);
+            $this->get()->push($existingCartItem);
+            return $cart;
         }
-
-        Cart::create([
-            // 'cookie_id' => $this->getCookieId(), // i need to add the cookie_id by event in the CartObserve method created
-            'user_id' => auth()->id(),
-            'product_id' => $product->id,
-            'quantity' => $quantity,
-        ]);
-        // return $existingCartItem->increment('quantity', $quantity);
+        return $existingCartItem->increment('quantity', $quantity);
     }
 
     public function update($id, $quantity)

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Front\CartController;
+use App\Http\Controllers\Front\CheckoutContrller;
 use App\Http\Controllers\Front\HomeContrller;
 use App\Http\Controllers\Front\ProductsController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,9 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('cart', CartController::class);
+Route::get('checkout', [CheckoutContrller::class, 'create'])->name('checkout');
+Route::post('checkout', [CheckoutContrller::class, 'store']);
+
 
 Route::post('/paypal/webhook', function () {
     echo 'Webhook received';

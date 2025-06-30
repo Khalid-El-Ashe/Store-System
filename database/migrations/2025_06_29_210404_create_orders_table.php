@@ -19,6 +19,13 @@ return new class extends Migration
             $table->string('payment_method');
             $table->enum('status', ['pending', 'processing', 'delivering', 'completed', 'cancelled', 'refunded'])->default('pending');
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
+
+            $table->float('shipping')->default(0);
+            $table->float('tax')->default(0);
+            $table->float('discount')->default(0);
+
+            // اريد تكوين حقل تجمعي لل
+            $table->float('')->default(0);
             $table->timestamps();
         });
     }

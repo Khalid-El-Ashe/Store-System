@@ -11,6 +11,7 @@ class OrderItem extends Pivot // this model i a model PivotTable so i need to ex
     use HasFactory;
     protected $table = 'order_items';
     public $incrementing = true;
+    public $timestamps = false;
 
     // One-To-One Relation
     public function product()

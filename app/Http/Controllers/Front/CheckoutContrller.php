@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Events\OrderCreated;
 use App\Http\Controllers\Controller;
+use App\Listeners\EmptyCart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Repositories\Cart\CartRepository;
@@ -58,16 +60,21 @@ class CheckoutContrller extends Controller
                     $order->addresses()->create($address);
                 }
             }
-            // when make new order i need to delete the cart
-            $cart->empty();
 
             DB::commit(); // اعتماد العملية
+
+            // i need to make simple event
+            // so i need to make Listener class to empty
+            // and how can i Triger or Connect the EventListener
+            // event('order.created', $order, Auth::user()); // in here i passed the arguments
+            event(new OrderCreated($order)); // this event is created by class
+
         } catch (Throwable $e) {
             // طبعا هان صار استثناء يبقى لازم اتراجع عن العملية ما دام جزء لم يعمل
             DB::rollBack();
             throw $e;
             return response()->json(['', $e->getMessage()], 500);
         }
-        return redirect()->route('home')->with('success', 'is ordered');
+        // return redirect()->route('home')->with('success', 'is ordered');
     }
 }

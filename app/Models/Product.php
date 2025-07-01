@@ -74,7 +74,7 @@ class Product extends Model
      */
     public function scopeActive(Builder $query)
     {
-        $query->where('status', '=', 'active');
+        $query->where('status', 'LIKE', 'active');
     }
 
     // accessor for the image attribute this is a scope function

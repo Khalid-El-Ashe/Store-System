@@ -33,6 +33,7 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class, 'order_items', 'order_id', 'product_id', 'id', 'id')
             ->using(OrderItem::class) // عشان عنا جدول وسيط لازم استخدم المودل الخاص بالجدول الوسيط في العلاقة
+            ->as('order_item') // i need to make named to the pivot table to response
             ->withPivot([
                 // هان اقوم بتحديد الجداول التي اريد ان ااتي بها من الجدول الوسيط
                 // i need to get the columnes need return it

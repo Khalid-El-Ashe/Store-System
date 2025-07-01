@@ -25,7 +25,7 @@ return new class extends Migration
             $table->float('discount')->default(0);
 
             // اريد تكوين حقل تجمعي لل
-            $table->float('')->default(0);
+            $table->float('total')->default(0);
             $table->timestamps();
         });
     }

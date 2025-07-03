@@ -18,6 +18,6 @@ class EmptyCart
      */
     public function handle($event): void
     {
-        Cart::empty();
+        Cart::empty(); // this is from Facad class created by me
     }
 }

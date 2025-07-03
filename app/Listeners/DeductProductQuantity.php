@@ -38,7 +38,11 @@ class DeductProductQuantity
 
         // update products set quantity = quantity -1
         foreach ($order->products as $product) {
+
+            //i need to make my Query
+            // هذا الاستعلام حتى انقص من الكمية
             $orderedQty = $product->order_item->quantity;
+
             if ($product->quantity > 0) {
                 $product->decrement('quantity', $orderedQty);
             } else {

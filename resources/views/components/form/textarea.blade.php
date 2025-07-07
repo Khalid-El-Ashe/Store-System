@@ -3,7 +3,7 @@
 'name' => '',
 'placeholder' => '',
 'value' => '',
-'label' => false, {{-- صححت lable إلى label --}}
+'label' => false,
 ])
 
 <label for="{{ $name }}">{{ $label }}</label>

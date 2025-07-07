@@ -32,6 +32,6 @@ class OrderAddress extends Model
     }
     public function getCountryNameAttribute()
     {
-        Countries::getName($this->country);
+        return Countries::getName($this->country);
     }
 }

@@ -22,12 +22,22 @@ class CheckoutContrller extends Controller
         if ($cart->get()->count() == 0) {
             return redirect()->route("home");
         }
+
+        $user = Auth::user();
+        // dd($user);
+
         return view('front.checkout', ['cart' => $cart, 'countries' => Countries::getNames()]);
     }
 
     public function store(Request $request, CartRepository $cart)
     {
-        $request->validate([]);
+        $request->validate([
+            'addr.billing.first_name' => ['required', 'string', 'max:255'],
+            'addr.billing.last_name' => ['required', 'string', 'max:255'],
+            'addr.billing.email' => ['required', 'string', 'email', 'max:255'],
+            'addr.billing.phone_number' => ['required', 'string', 'max:255'],
+            'addr.billing.city' => ['required', 'string', 'max:255'],
+        ]);
 
         $items = $cart->get()->groupBy('product.store_id')->all(); // need to get collection of items
 
@@ -73,7 +83,7 @@ class CheckoutContrller extends Controller
             // طبعا هان صار استثناء يبقى لازم اتراجع عن العملية ما دام جزء لم يعمل
             DB::rollBack();
             throw $e;
-            return response()->json(['', $e->getMessage()], 500);
+            // return response()->json(['message', $e->getMessage()], 500);
         }
         // return redirect()->route('home')->with('success', 'is ordered');
     }

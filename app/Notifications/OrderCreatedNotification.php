@@ -60,10 +60,16 @@ class OrderCreatedNotification extends Notification
     {
         // i need to get the user information from relation
         $addr = $this->order->billingAddress;
+
+
+        $name = $addr?->name ?? 'Unknown';
+        $country = $addr?->country_name ?? 'Unknown Country';
+
         return (new MailMessage)
             ->subject("New Order #{$this->order->number}")
+            ->from("developerKhalid@gmail.com", "Store System") // in here you can to add the sender notification هنا يتم تحديد المرسل
             ->greeting("Hi {$notifiable->name},") // دالة الترحيب
-            ->line("Create new Order #{$this->order->number} by. {$addr->name} from {$addr->country_name}") // the name and country_name is the accessoure function from the OrderAddress Model class
+            ->line("Create new Order #{$this->order->number} by. by {$name} from {$country}") // the name and country_name is the accessoure function from the OrderAddress Model class
             ->action('View Order', url('/dashboard'))
             ->line('Thank you for using our application!');
             // ->view(''); // هان طبعا ممكن تستدعي التصميم او الواجهة تعتك اللي انت راح تعملها

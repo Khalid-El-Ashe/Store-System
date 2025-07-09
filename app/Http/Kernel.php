@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\UpdateUserLastActiveAt::class, // Custom middleware to update user's last active timestamp
+            \App\Http\Middleware\MarkNotificationAsRead::class, // Custom middleware to make the notification is Read
         ],
 
         'api' => [

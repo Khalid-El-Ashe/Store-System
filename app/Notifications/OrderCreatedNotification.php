@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -33,7 +34,7 @@ class OrderCreatedNotification extends Notification
     public function via(object $notifiable): array
     {
         // you can to return more or some channels
-        return ['mail'];
+        return ['mail', 'database', 'broadcast'];
 
         $channels = ['database']; // array of channels is a default database channel
 
@@ -78,8 +79,33 @@ class OrderCreatedNotification extends Notification
     // in here i need to build my channels method
     public function toVonage(object $notifiable) // this method for sms
     {}
-    public function toBroadcast(object $notifiable) {}
-    public function toDatabase(object $notifiable) {}
+    public function toDatabase(object $notifiable) {
+        $addr = $this->order->billingAddress;
+
+        $name = $addr?->name ?? 'Unknown';
+        $country = $addr?->country_name ?? 'Unknown Country';
+        // i need to return my database
+        return [
+            "body" => "Create new Order #{$this->order->number} by. by {$name} from {$country}",
+            'icon' => 'fas fa-file',
+            'url' => url('/dashboard'),
+            'order_id' => $this->order->id,
+        ];
+    }
+    public function toBroadcast(object $notifiable) {
+        $addr = $this->order->billingAddress;
+
+        $name = $addr?->name ?? 'Unknown';
+        $country = $addr?->country_name ?? 'Unknown Country';
+        // i need to return my data
+        return new BroadcastMessage( [
+            "body" => "Create new Order #{$this->order->number} by. by {$name} from {$country}",
+            'icon' => 'fas fa-file',
+            'url' => url('/dashboard'),
+            'order_id' => $this->order->id,
+        ]);
+    }
+
 
     /**
      * Get the array representation of the notification.

@@ -36,5 +36,8 @@ class Person
     public static function setCountry($country)
     {
         Person::$country = $country;
+        self::$departmanet = 'IT';
+        self::MALE; // you can access constants using self::
+        Person::FEMALE; // or using class name
     }
 }

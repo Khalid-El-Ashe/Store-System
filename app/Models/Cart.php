@@ -28,7 +28,7 @@ class Cart extends Model
     // deleting, deleted, restoring, restored, retrieved, booted
 
     // i need to use the observer listener
-    public static function booted()
+    protected static function booted()
     {
         // parent::boot();
         // this function is inject into the model
@@ -40,7 +40,7 @@ class Cart extends Model
         //     // in the first i need to make the uuid
         //     $cart->id = Str::uuid();
         // });
-        static::observe(CartObserver::class);
+        static::observe(CartObserver::class); # this is to use the CartObserver class and to make uuid for the cart item
 
         // اريد ان اعمل هذه الدالة العامة لانها تتكرر في كثير من الكود بالتالي عملته لنظافة الكود Clean Coding
         static::addGlobalScope('cookie_id', function (Builder $builder) {
@@ -51,7 +51,7 @@ class Cart extends Model
     // i need to build my relashinships
     public function user()
     {
-        return $this->belongsTo(User::class)->withDefault('name', 'Anonymous');
+        return $this->belongsTo(User::class)->withDefault(['name'=> 'Anonymous']);
     }
 
     public function product()

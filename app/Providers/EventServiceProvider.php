@@ -23,7 +23,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        // in here i need to add my eventListener class
+        // in here i need to add my event class & Listener classes
         // 'order.created' => [
         //     DeductProductQuantity::class,
         //     EmptyCart::class,

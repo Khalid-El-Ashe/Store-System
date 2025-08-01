@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Admin;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
@@ -24,9 +25,10 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        Category::factory(50)->create();
-        Store::factory(50)->create();
-        Product::factory(150)->create();
+        // Category::factory(50)->create();
+        // Store::factory(50)->create();
+        // Product::factory(150)->create();
+        // Admin::factory(5)->create();
 
         // in here i need to add my seeders class
         // $this->call(UserSeeder::class);

@@ -258,7 +258,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         const userID = "{{Auth::id()}}";
     </script>
     @vite('resources/js/app.js')
-    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
     @yield('scripts')
 </body>
 

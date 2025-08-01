@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         // i need to use Scope to get the products by Querey
         $products = Product::with('category')
@@ -46,7 +46,7 @@ class ProductsController extends Controller
     }
     public function filter(Request $request)
     {
-        $query = \App\Models\Product::with('category')->active();
+        $query = Product::with('category')->active();
 
         if ($request->has('category')) {
             $query->where('category_id', $request->input('category'));
@@ -78,7 +78,7 @@ class ProductsController extends Controller
     public function compare(Request $request)
     {
         $productIds = $request->input('products', []);
-        $products = \App\Models\Product::with('category')
+        $products = Product::with('category')
             ->whereIn('id', $productIds)
             ->active()
             ->get();
@@ -88,7 +88,7 @@ class ProductsController extends Controller
     public function wishlist(Request $request)
     {
         // Assuming you have a wishlist functionality implemented
-        $wishlist = \App\Models\Product::with('category')
+        $wishlist = Product::with('category')
             ->whereIn('id', $request->session()->get('wishlist', []))
             ->active()
             ->get();
@@ -120,7 +120,7 @@ class ProductsController extends Controller
     public function review(Request $request, $id)
     {
         // Assuming you have a review functionality implemented
-        $product = \App\Models\Product::findOrFail($id);
+        $product = Product::findOrFail($id);
         $review = $request->input('review');
 
         // Save the review logic here (e.g., save to database)

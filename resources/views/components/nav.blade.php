@@ -2,7 +2,7 @@
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
         @foreach ($items as $item)
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{route($item['route'])}}" class="nav-link {{ Route::is($item['active'])? 'active' : '' }} ">
                 <i class="{{$item['icon']}}"></i>
                 <p>
@@ -12,7 +12,7 @@
                     @endif
                 </p>
             </a>
-        </li>
+        </li> --}}
         @endforeach
 
         <li class="nav-header">Settings</li>
@@ -23,10 +23,22 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('logout') }}" class="nav-link">
+            <a href="#" class="nav-link"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="nav-icon fas fa-sign-out-alt"></i>
                 <p>Logout</p>
             </a>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+            {{-- <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="nav-link" style="border: none; background: none; padding: 0;">
+                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                    <p>Logout</p>
+                </button>
+            </form> --}}
         </li>
     </ul>
 </nav>

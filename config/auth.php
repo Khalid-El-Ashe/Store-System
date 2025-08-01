@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
     ],
 
     /*
@@ -65,6 +69,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -96,6 +104,12 @@ return [
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
+            'table' => 'password_reset_tokens',
+            'expire' => 60, // مدة صلاحية رابط إعادة تعيين كلمة المرور للمسؤولين
+            'throttle' => 60, // هان المقصود هو منع المستخدم من إنشاء توكنات او اعادة  تعيين كلمة المرور بشكل سريع جدًا  في وقت محدد بعد انقضاء هذا الوقت بعمل كمان مرة توكن او طلب جديد
         ],
     ],
 

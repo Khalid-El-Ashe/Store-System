@@ -64,6 +64,7 @@ class CheckoutContrller extends Controller
                     ]);
                 }
 
+
                 // now i need to add the customer information into the orderAddressTable
                 foreach ($request->post('addr') as $type => $address) {
                     $address['type'] = $type;

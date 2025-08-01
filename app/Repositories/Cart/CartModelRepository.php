@@ -48,6 +48,7 @@ class CartModelRepository implements CartRepository
             // ->where('cookie_id', '=', $this->getCookieId()) // this line is was Global in Scope Model Class
             ->first();
 
+        // if the product is not exists in the cart, i will create new cart item
         if (!$existingCartItem) {
             $cart =  Cart::create([
                 // 'cookie_id' => $this->getCookieId(), // i need to add the cookie_id by event in the CartObserve method created

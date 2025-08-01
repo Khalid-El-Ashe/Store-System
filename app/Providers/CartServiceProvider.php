@@ -7,7 +7,7 @@ use App\Repositories\Cart\CartRepository;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
-// you need to add this service provider to the config/app.php file in the providers array
+#todo: you need to add this service provider to the config/app.php file in the providers array
 class CartServiceProvider extends ServiceProvider
 {
     /**

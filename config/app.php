@@ -170,10 +170,12 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        App\Providers\BroadcastServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\CartServiceProvider::class, // Custom service provider for Cart repository
+        App\Providers\FortifyServiceProvider::class, // Custom service provider for Fortify authentication dependence
+
     ])->toArray(),
 
     /*

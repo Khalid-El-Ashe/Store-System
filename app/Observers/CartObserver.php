@@ -13,6 +13,9 @@ class CartObserver
      */
     public function creating(Cart $cart): void
     {
+        # هذا الكود هو لتوليد UUID جديد عند إنشاء عنصر سلة التسوق
+        // Generate a new UUID for the cart item
+        // and set the cookie_id from the Cart model's static method
         $cart->id = Str::uuid();
         $cart->cookie_id = Cart::getCookieId();
     }

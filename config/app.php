@@ -74,6 +74,7 @@ return [
 
     // i need to add my Default Currency
     'currency' => 'USD', // This is the default currency for the application, you can change it to any other currency like 'EUR', 'GBP', etc.
+    'api_token' => env('API_TOKEN'),
 
     /*
     |--------------------------------------------------------------------------

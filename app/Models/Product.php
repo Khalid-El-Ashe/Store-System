@@ -15,6 +15,18 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
+
+    // todo i need make this proberties to hidden the value is not need it
+    protected $hidden = [
+        'image',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
+    // i need make accessure attribute to use in api
+    protected $appends = ['image_url'];
+
     protected $fillable = [
         'name',
         'category_id',
@@ -63,6 +75,10 @@ class Product extends Model
         //     }
         // });
         static::addGlobalScope(StoreScope::class);
+
+        static::creating(function (Product $product) {
+            $product->slug = Str::slug($product->name);
+        });
     }
 
     // i need to make a scope to get the active products
@@ -106,5 +122,44 @@ class Product extends Model
         }
         return number_format(100 - (100 * $this->compare_price / $this->price), 2);
         // return $query->whereNotNull('compare_price')->where('compare_price', '>', 0);
+    }
+
+    // i need make this local scop to using in api
+    public function scopeFilter(Builder $builder, $filters) {
+        $options = array_merge([ // todo searching about array_merge
+            'store_id'=> null,
+            'category_id'=> null,
+            'tag_id'=> null,
+            'status'=> 'active',
+        ], $filters);
+
+        $builder->when($options['status'], function ($query, $status) {
+            return $query->where('status', $status);
+        });
+
+        $builder->when($options['store_id'], function ($builder, $value) {
+            $builder->where('store_id', $value);
+        });
+
+        $builder->when($options['category_id'], function ($builder, $value) {
+            $builder->where('category_id', $value);
+        });
+
+        $builder->when($options['tag_id'], function ($builder, $value) {
+
+            // todo native SQL command
+            // $builder->whereRaw('id in (select product_id from product_tag where tag_id = ?)', [$value]);
+            // $builder->whereRaw('iexists in (select 1 from product_tag where tag_id = ? and product_id = products.id)', [$value]);
+
+            // todo same native SQL command by Elequent DB (Query Builder)
+            $builder->whereExists(function ($query) use ($value) {
+                $query->select(1)->from('product_tag')->whereRow('product_id = products.id')->where('tag_id', $value);
+            });
+
+            // $builder->whereHas('tags', function ($builder) use ($value) {
+            //     $builder->where('id', $value);
+            // });
+        });
+
     }
 }

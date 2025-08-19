@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AccessTokensController;
 use App\Http\Controllers\Api\ProductsController;
+use App\Http\Controllers\Front\CurrencyConverterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // todo this is my first api
-Route::apiResource('products', ProductsController::class);
+// Route::apiResource('products', ProductsController::class);
 Route::post('auth/access-tokens', [AccessTokensController::class, 'store'])->middleware('guest:sanctum');
 Route::delete('auth/access-tokens/{token?}', [AccessTokensController::class, 'distroy'])->middleware('auth:sanctum'); // todo {token?} the Question mark that mean the parameter is optional

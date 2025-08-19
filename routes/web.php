@@ -3,8 +3,10 @@
 use App\Http\Controllers\Front\Auth\TwoFactorAuthenticationContrller;
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutContrller;
+use App\Http\Controllers\Front\CurrencyConverterController;
 use App\Http\Controllers\Front\HomeContrller;
 use App\Http\Controllers\Front\ProductsController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,7 +50,16 @@ Route::get('auth/user/2fa', [TwoFactorAuthenticationContrller::class, 'index'])-
 
 Route::post('/paypal/webhook', function () {
     echo 'Webhook received';
-});
+})->name('paypal.webhook');
+
+// Route::get('/currency', function () {
+//   echo 'Currency page';
+// });
+// Route::post('/currency-store', [CurrencyConverterController::class, 'store'])->name('currency.store');
+Route::get('/currency', [CurrencyConverterController::class, function(){
+    return view('layouts.front');
+}]);
+Route::post('/currency-store', [CurrencyConverterController::class, 'store'])->name('currency.store');
 
 // i need to implement the routes class
 // require __DIR__ . '/auth.php';

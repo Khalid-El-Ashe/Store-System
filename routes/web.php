@@ -8,6 +8,7 @@ use App\Http\Controllers\Front\HomeContrller;
 use App\Http\Controllers\Front\ProductsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +21,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeContrller::class, 'index'])->middleware('auth')->name('home');
 
 // Route::prefix('/')->group(function () {
 //     Route::resource('dashboard', DashboardController::class);
@@ -30,36 +30,43 @@ Route::get('/', [HomeContrller::class, 'index'])->middleware('auth')->name('home
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
-Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show');
-Route::get('/products/search', [ProductsController::class, 'search'])->name('products.search');
-Route::get('/products/filter', [ProductsController::class, 'filter'])->name('products.filter');
+// todo LaravelLocalization::setLocale() -> this is from mcamara package
+Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
 
-// Route::middleware('auth')->group(function () {
-    // Route::resource('/profile', ProfileController::class);
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
+    Route::get('/', [HomeContrller::class, 'index'])->middleware('auth')->name('home');
 
-Route::resource('cart', CartController::class);
-Route::get('checkout', [CheckoutContrller::class, 'create'])->name('checkout');
-Route::post('checkout', [CheckoutContrller::class, 'store']);
+    Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
+    Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show');
+    Route::get('/products/search', [ProductsController::class, 'search'])->name('products.search');
+    Route::get('/products/filter', [ProductsController::class, 'filter'])->name('products.filter');
 
-Route::get('auth/user/2fa', [TwoFactorAuthenticationContrller::class, 'index'])->middleware('auth')->name('front.2FA');
+    // Route::middleware('auth')->group(function () {
+        // Route::resource('/profile', ProfileController::class);
+        // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // });
 
-Route::post('/paypal/webhook', function () {
-    echo 'Webhook received';
-})->name('paypal.webhook');
+    Route::resource('cart', CartController::class);
+    Route::get('checkout', [CheckoutContrller::class, 'create'])->name('checkout');
+    Route::post('checkout', [CheckoutContrller::class, 'store']);
 
-// Route::get('/currency', function () {
-//   echo 'Currency page';
-// });
-// Route::post('/currency-store', [CurrencyConverterController::class, 'store'])->name('currency.store');
-Route::get('/currency', [CurrencyConverterController::class, function(){
-    return view('layouts.front');
-}]);
-Route::post('/currency-store', [CurrencyConverterController::class, 'store'])->name('currency.store');
+    Route::get('auth/user/2fa', [TwoFactorAuthenticationContrller::class, 'index'])->middleware('auth')->name('front.2FA');
+
+    Route::post('/paypal/webhook', function () {
+        echo 'Webhook received';
+    })->name('paypal.webhook');
+
+    // Route::get('/currency', function () {
+    //   echo 'Currency page';
+    // });
+    // Route::post('/currency-store', [CurrencyConverterController::class, 'store'])->name('currency.store');
+    Route::get('/currency', function(){
+        return view('layouts.front');
+    });
+    Route::post('/currency-store', [CurrencyConverterController::class, 'store'])->name('currency.store');
+
+});
 
 // i need to implement the routes class
 // require __DIR__ . '/auth.php';

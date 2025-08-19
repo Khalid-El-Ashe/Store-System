@@ -54,7 +54,7 @@
                                             <select name="currency_code" onchange="this.form.submit()">
                                                 <option value="USD" @selected('USD'==session('currency_code'))>$ USD
                                                 </option>
-                                                <option value="EUR" @selected('EURO'==session('currency_code'))>€ EURO
+                                                <option value="EUR" @selected('EUR'==session('currency_code'))>€ EURO
                                                 </option>
                                                 <option value="ILS" @selected('ILS'==session('currency_code'))>$ ILS
                                                 </option>
@@ -70,15 +70,18 @@
                                 </li>
                                 <li>
                                     <div class="select-position">
-                                        <select id="select5">
-                                            <option value="0" selected>English</option>
-                                            <option value="1">Español</option>
-                                            <option value="2">Filipino</option>
-                                            <option value="3">Français</option>
-                                            <option value="4">العربية</option>
-                                            <option value="5">हिन्दी</option>
-                                            <option value="6">বাংলা</option>
-                                        </select>
+                                        <form action="{{ URL::current() }}" method="get">
+
+                                            <select name="locale" onchange="this.form.submit()">
+                                                @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                                <option value="{{ $localeCode }}"
+                                                    @selected($localeCode==App::currentLocale())>
+
+                                                    {{ $properties['native'] }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </form>
                                     </div>
                                 </li>
                             </ul>
@@ -87,9 +90,9 @@
                     <div class="col-lg-4 col-md-4 col-12">
                         <div class="top-middle">
                             <ul class="useful-links">
-                                <li><a href="index.html">Home</a></li>
-                                <li><a href="about-us.html">About Us</a></li>
-                                <li><a href="contact.html">Contact Us</a></li>
+                                <li><a href="index.html">{{trans('home')}}</a></li>
+                                <li><a href="about-us.html">@lang('about_us')</a></li>
+                                <li><a href="contact.html">{{__('app.contact_us')}}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -116,10 +119,10 @@
                             </div>
                             <ul class="user-login">
                                 <li>
-                                    <a href="login.html">Sign In</a>
+                                    <a href="login.html">{{__('app.signin')}}</a>
                                 </li>
                                 <li>
-                                    <a href="register.html">Register</a>
+                                    <a href="register.html">{{Lang::get('register')}}</a>
                                 </li>
                             </ul>
                             @endauth

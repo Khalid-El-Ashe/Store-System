@@ -1,23 +1,16 @@
 {{-- i need to add the default value --}}
 @props([
-'type' => 'text',
-'name' => '',
-'placeholder' => '',
-'value' => '',
-'label' => false,
+'type' => 'text', 'name', 'value' => '', 'label' => false
 ])
 
-@if ($label)
-<label for="{{ $name }}">{{ $label }}</label>
+@if($label)
+<label for="">{{ $label }}</label>
 @endif
 
-<input type="{{ $type }}" name="{{ $name }}" id="{{ $name }}" placeholder="{{ $placeholder }}"
-    value="{{ old($name, $value) }}" autocomplete="{{ $name }}" {{ $attributes->class(['form-control', 'is-invalid' =>
-$errors->has($name)]) }}
+<input type="{{ $type }}" name="{{ $name }}" value="{{ old($name, $value) }}" {{ $attributes->class([
+'form-control',
+'is-invalid' => $errors->has($name)
+]) }}
 >
 
-@error($name)
-<div class="invalid-feedback">
-    {{ $message }}
-</div>
-@enderror
+<x-form.validation-feedback :name="$name" />

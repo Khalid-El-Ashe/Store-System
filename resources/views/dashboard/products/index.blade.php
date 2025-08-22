@@ -12,7 +12,9 @@
 @section('content')
 
 <div class="mb-5">
-    <a href="{{route('products.create')}}" class="btn bg-olive active">Add Product</a>
+    @can('products.create')
+    <a href="{{route('dashboard.products.create')}}" class="btn bg-olive active">Add Product</a>
+    @endcan
     {{-- <a href="{{route('products.trash')}}" class="btn bg-olive active">Trashes products</a> --}}
 </div>
 
@@ -63,7 +65,7 @@
             <td>{{$product->name}}</td>
 
             <td>{{$product->category->name}}</td>
-            <td>{{$product->store->name}}</td>
+            <td>{{$product->store->name ?? ''}}</td>
 
             <td>
                 @if ($product->status == 'active')
@@ -77,9 +79,9 @@
 
             <td>
                 <div class="btn-group">
-                    <a href="{{ route('products.edit', $product->id) }}"
+                    <a href="{{ route('dashboard.products.edit', $product->id) }}"
                         class="btn btn-block btn-outline-success btn-sm">Edit</a>
-                    <form action="{{route('products.destroy', $product->id)}}" method="post">
+                    <form action="{{route('dashboard.products.destroy', $product->id)}}" method="post">
                         @csrf
                         {{-- <input type="hidden" name="_method" value="delete"> --}}
                         @method('delete')

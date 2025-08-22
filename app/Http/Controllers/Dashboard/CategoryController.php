@@ -8,6 +8,7 @@ use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -17,6 +18,17 @@ class CategoryController extends Controller
 {
     public function index()
     {
+
+        // if this user have not this permission
+        // if(Gate::denies('categories.view')) {
+        //     abort(403, 'You do not have permission to view categories.');
+        // }
+
+        // if this user have this permission
+        if(!Gate::allows('categories.view')) {
+            abort(403);
+        }
+
         $request = request();
         // $categories = Category::paginate(2);
 
@@ -54,8 +66,15 @@ class CategoryController extends Controller
      */
     public function create()
     {
+
+        // if this user do not have this permission
+        if(!Gate::allows('categories.create')) {
+            return view('error');
+        }
+
         $parents = Category::all();
-        return view('dashboard.categories.create', ['parents' => $parents]);
+        $category = new Category();
+        return view('dashboard.categories.create',compact('parents','category'));
     }
 
     /**
@@ -63,6 +82,10 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
+
+        // if this user have this permission
+        Gate::authorize('categories.create');
+
         // $request->validate(Category::validation($request));
         $request->merge([
             'slug' => Str::slug($request->post('name'))
@@ -80,6 +103,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        if(Gate::denies('categories.view')) {
+            abort(403, 'You do not have permission to view this category.');
+        }
         return view('dashboard.categories.show', ['category' => $category]);
     }
 
@@ -89,6 +115,7 @@ class CategoryController extends Controller
     // Category $categories,
     public function edit(string $id)
     {
+        Gate::authorize('categories.update');
 
         try {
             $category = Category::find($id);
@@ -118,6 +145,8 @@ class CategoryController extends Controller
      */
     public function update(CategoryRequest $request, string $id)
     {
+        // Gate::authorize('categories.update');
+
         // $request->validate(Category::validation($request, $id));
         $category = Category::findOrFail($id);
 
@@ -146,6 +175,8 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
+        Gate::authorize('categories.delete');
+
         // Category::where('id', '=', $id)->delete();
         $category = Category::findOrFail($id);
         $category->delete();

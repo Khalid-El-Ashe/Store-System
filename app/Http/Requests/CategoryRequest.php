@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\Filter;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryRequest extends FormRequest
 {
@@ -12,7 +13,12 @@ class CategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Allow all for now; add your authorization logic if needed
+        // Check if the user has permission to update or create categories
+        if($this->route('category')) {
+            return Gate::allows('categories.update');
+        }
+        return Gate::allows('categories.create'); // Ensure the user has permission to create categories
+        // return true; // Allow all for now; add your authorization logic if needed
     }
 
     /**

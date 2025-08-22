@@ -12,8 +12,11 @@
 @section('content')
 
 <div class="mb-5">
-    <a href="{{route('categories.create')}}" class="btn bg-olive active">Add Category</a>
-    <a href="{{route('categories.trash')}}" class="btn bg-olive active">Trashes Categories</a>
+    {{-- using the permissions in the front --}}
+    @if (Auth::user()->can('categories.create'))
+    <a href="{{route('dashboard.categories.create')}}" class="btn bg-olive active">Add Category</a>
+    @endif
+    {{-- <a href="{{route('categories.trash')}}" class="btn bg-olive active">Trashes Categories</a> --}}
 </div>
 
 {{-- @component('components.alert') --}}
@@ -60,7 +63,7 @@
                 @endif
             </td>
 
-            <td><a href="{{route('categories.show', $category->id)}}"><span
+            <td><a href="{{route('dashboard.categories.show', $category->id)}}"><span
                         class="badge bg-primary">{{$category->name}}</span></a></td>
 
             <td>{{$category->parent->name}}</td>
@@ -78,9 +81,13 @@
 
             <td>
                 <div class="btn-group">
-                    <a href="{{ route('categories.edit', $category->id) }}"
+                    @can('categories.update')
+                    <a href="{{ route('dashboard.categories.edit', $category->id) }}"
                         class="btn btn-block btn-outline-success btn-sm">Edit</a>
-                    <form action="{{route('categories.destroy', $category->id)}}" method="post">
+                    @endcan
+
+                    @can('categories.delete')
+                    <form action="{{route('dashboard.categories.destroy', $category->id)}}" method="post">
                         @csrf
                         {{-- <input type="hidden" name="_method" value="delete"> --}}
                         @method('delete')
@@ -88,6 +95,7 @@
                             Delete
                         </button>
                     </form>
+                    @endcan
                 </div>
             </td>
         </tr>

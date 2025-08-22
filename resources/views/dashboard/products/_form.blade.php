@@ -6,7 +6,7 @@
     <label for="">Category</label>
     <select name="category_id" class="form-control form-select">
         <option value="">Primary Category</option>
-        @foreach (App\Models\Category::all() as $category)
+        @foreach (Category::all() as $category)
         <option value="{{ $category->id }}" @selected(old('category_id', $product->category_id) == $category->id)>
             {{ $category->name }}
         </option>

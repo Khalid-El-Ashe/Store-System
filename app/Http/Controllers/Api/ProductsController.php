@@ -24,8 +24,14 @@ class ProductsController extends Controller
         // return Product::filter($request->query())->with('category:id,name', 'store:id,name,description', 'tags:id,name')->paginate();
 
         // todo if you need get the collection DATA
-        $product = Product::filter($request->query())->with('category:id,name', 'store:id,name,description', 'tags:id,name')->paginate();
-        return ProductResource::collection($product);
+        $products = Product::filter($request->query())->with('category:id,name', 'store:id,name,description', 'tags:id,name')->paginate();
+        // return ProductResource::collection($products);
+        return view('dashboard.products.index', compact('products'));
+    }
+
+    public function create()
+    {
+        //
     }
 
     /**
@@ -45,7 +51,7 @@ class ProductsController extends Controller
 
         $user = $request->user();
         if (!$user->tokenCan('products.create')) {
-                        return response()->json(['message'=> 'not allowed'], 403); 
+                        return response()->json(['message'=> 'not allowed'], 403);
         } //todo if the user dose not have abillities (صلاحية)
 
         return Product::create($request->all());

@@ -16,7 +16,7 @@ class ProductsController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('front.products.index', ['products' => $products]);
+        return view('dashboard.products.index', ['products' => $products]);
     }
     public function show(Product $product)
     {

@@ -6,11 +6,13 @@
 @endsection
 @section('content')
 
-<form action="{{route('products.update', $product->id)}}" method="post" enctype="multipart/form-data">
+<form action="{{route('dashboard.products.update', $product->id)}}" method="post" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
-    @include('dashboard.products._form')
+    @include('dashboard.products._form',[
+    'button_label' => 'Update'
+    ])
 </form>
 
 @endsection

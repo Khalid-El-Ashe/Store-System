@@ -13,7 +13,7 @@
 
 <div class="mb-5">
     {{-- using the permissions in the front --}}
-    @can('roles.create')
+    @can('create', 'App\\Models\Role')
     <a href="{{route('dashboard.roles.create')}}" class="btn bg-olive active">Add Role</a>
     @endcan
 </div>
@@ -45,12 +45,12 @@
 
             <td>
                 <div class="btn-group">
-                    @can('roles.update')
+                    @can('update', $role)
                     <a href="{{ route('dashboard.roles.edit', $role->id) }}"
                         class="btn btn-block btn-outline-success btn-sm">Edit</a>
                     @endcan
 
-                    @can('roles.delete')
+                    @can('delete', $role)
                     <form action="{{route('dashboard.roles.destroy', $role->id)}}" method="post">
                         @csrf
                         {{-- <input type="hidden" name="_method" value="delete"> --}}

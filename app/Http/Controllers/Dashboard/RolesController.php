@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Gate;
 class RolesController extends Controller
 {
 
-    //  public function __construct()
-    // {
-    //     $this->authorizeResource(Role::class, 'role');
-    // }
+    public function __construct()
+    {
+        $this->authorizeResource(Role::class, 'role');
+    }
 
     /**
      * Display a listing of the resource.
@@ -22,7 +22,7 @@ class RolesController extends Controller
     public function index()
     {
         //
-        Gate::authorize('roles.view'); // if this user have not this permission
+        // Gate::authorize('roles.view'); // if this user have not this permission
         $roles = Role::paginate();
         return view('dashboard.roles.index', compact('roles'));
     }
@@ -32,6 +32,7 @@ class RolesController extends Controller
      */
     public function create()
     {
+        // Gate::authorize('roles.create');
         return view('dashboard.roles.create', [
             'role' => new Role(),
         ]);
@@ -55,16 +56,14 @@ class RolesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-
-    }
+    public function show(string $id) {}
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Role $role)
     {
+        // Gate::authorize('roles.update');
         // i need get the relation with abilities
         $role_abilities = $role->abilities()->pluck('type', 'ability')->toArray(); // pluck is return array have key and value
         return view('dashboard.roles.edit', compact('role', 'role_abilities'));
@@ -76,8 +75,8 @@ class RolesController extends Controller
     public function update(Request $request, Role $role)
     {
         $request->validate([
-            'name'=> 'required|string|max:255',
-            'abilities'=> 'required|array',
+            'name' => 'required|string|max:255',
+            'abilities' => 'required|array',
         ]);
 
         $role->updateWithAbilities($request);
@@ -90,6 +89,7 @@ class RolesController extends Controller
      */
     public function destroy(string $id)
     {
+        // Gate::authorize('roles.delete');
         Role::destroy($id);
         return redirect()->route('dashboard.roles.index')->with('success', 'Role deleted successfully.');
     }

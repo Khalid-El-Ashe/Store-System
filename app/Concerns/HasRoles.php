@@ -22,7 +22,7 @@ trait HasRoles {
 
         $denied = $this->roles()->whereHas('abilities', function ($query) use ($ability) {
             $query->where('ability', $ability)
-                  ->where('type', '=', 'deny');
+                  ->where('type', 'deny');
         })->exists();
 
 
@@ -32,7 +32,7 @@ trait HasRoles {
 
         return $this->roles()->whereHas('abilities', function ($query) use ($ability) {
             $query->where('ability', $ability)
-                ->where('type', '=', 'allow');
+                ->where('type', 'allow');
         })->exists();
     }
 }

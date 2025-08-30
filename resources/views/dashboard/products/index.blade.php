@@ -12,7 +12,7 @@
 @section('content')
 
 <div class="mb-5">
-    @can('products.create')
+    @can('create', 'App\\Models\Product')
     <a href="{{route('dashboard.products.create')}}" class="btn bg-olive active">Add Product</a>
     @endcan
     {{-- <a href="{{route('products.trash')}}" class="btn bg-olive active">Trashes products</a> --}}
@@ -79,8 +79,12 @@
 
             <td>
                 <div class="btn-group">
+                    @can('update', $product)
                     <a href="{{ route('dashboard.products.edit', $product->id) }}"
                         class="btn btn-block btn-outline-success btn-sm">Edit</a>
+                    @endcan
+
+                    @can('delete', $product)
                     <form action="{{route('dashboard.products.destroy', $product->id)}}" method="post">
                         @csrf
                         {{-- <input type="hidden" name="_method" value="delete"> --}}
@@ -89,6 +93,7 @@
                             Delete
                         </button>
                     </form>
+                    @endcan
                 </div>
             </td>
         </tr>

@@ -5,110 +5,124 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class ProductsController extends Controller
 {
-    public function __construct() {
-        $this->middleware('auth:sanctum')->except('index', 'show'); // هنا اريد ان استثمي بعض الدوال من انو لازم يكون المستحدم او الرابط يحتوي على تحقق من تسجيل الدخول
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except('index', 'show');
     }
 
     /**
      * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        // i need using my scop filter function is in Product model class
-        // return Product::filter($request->query())->with('category:id,name', 'store:id,name,description', 'tags:id,name')->paginate();
 
-        // todo if you need get the collection DATA
-        $products = Product::filter($request->query())->with('category:id,name', 'store:id,name,description', 'tags:id,name')->paginate();
-        // return ProductResource::collection($products);
-        return view('dashboard.products.index', compact('products'));
-    }
+        $products = Product::filter($request->query())
+            ->with('category:id,name', 'store:id,name', 'tags:id,name')
+            ->paginate();
 
-    public function create()
-    {
-        //
+        return ProductResource::collection($products);
     }
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        // validation roules
         $request->validate([
-            'name'=> 'required|string|max:255',
-            'desription'=> 'nullable|string|max:255',
-            'category_id'=> 'required|exists:categories,id',
-            'status'=> 'in:active,inactive',
-            'price'=> 'required|numeric|min:0',
-            'compare_price'=> 'nullable|numeric|gt:price'
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'in:active,inactive',
+            'price' => 'required|numeric|min:0',
+            'compare_price' => 'nullable|numeric|gt:price',
         ]);
 
         $user = $request->user();
         if (!$user->tokenCan('products.create')) {
-                        return response()->json(['message'=> 'not allowed'], 403);
-        } //todo if the user dose not have abillities (صلاحية)
+            abort(403, 'Not allowed');
+        }
 
-        return Product::create($request->all());
-        // return Response::json(Product::create($request->all()), 201);
+        $product = Product::create($request->all());
 
+
+        return Response::json($product, 201, [
+            'Location' => route('products.show', $product->id),
+        ]);
     }
 
     /**
      * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function show(Product $product)
     {
-        // return $product;
+        return new ProductResource($product);
 
-        return new ProductResource($product); // todo i make my collection is from Resource
-
-        // return Product::findOrFail($product)->load('category:id,name', 'store:id,name', 'tags:id,name');
+        return $product
+            ->load('category:id,name', 'store:id,name', 'tags:id,name');
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Product $product)
     {
-         // validation roules
         $request->validate([
-            'name'=> 'sometimes|string|max:255', // todo you can see i using the sometimes roule
-            'desription'=> 'nullable|string|max:255',
-            'category_id'=> 'sometimes|exists:categories,id',
-            'status'=> 'in:active,inactive',
-            'price'=> 'sometimes|numeric|min:0',
-            'compare_price'=> 'nullable|numeric|gt:price'
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'category_id' => 'sometimes|required|exists:categories,id',
+            'status' => 'in:active,inactive',
+            'price' => 'sometimes|required|numeric|min:0',
+            'compare_price' => 'nullable|numeric|gt:price',
         ]);
 
         $user = $request->user();
-            if (!$user->tokenCan('products.update')) {
-                       return response()->json(['message'=> 'not allowed'], 403);
-        } //todo if the user dose not have abillities (صلاحية)
+        if (!$user->tokenCan('products.update')) {
+            abort(403, 'Not allowed');
+        }
 
-
-        // return $product->update($request->all());
         $product->update($request->all());
-        return Response::json($product, 201);
+
+
+        return Response::json($product);
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-
         $user = Auth::guard('sanctum')->user();
-            if (!$user->tokenCan('products.delete')) {
-            return response()->json(['message'=> 'not allowed'], 403);
-        } //todo if the user dose not have abillities (صلاحية)
+        if (!$user->tokenCan('products.delete')) {
+            return response([
+                'message' => 'Not allowed'
+            ], 403);
+        }
 
         Product::destroy($id);
-        return response()->json(['Deleted Product is successfully', 200]);
+        return [
+            'message' => 'Product deleted successfully',
+        ];
     }
 }

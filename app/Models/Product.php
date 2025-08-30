@@ -125,12 +125,13 @@ class Product extends Model
     }
 
     // i need make this local scop to using in api
-    public function scopeFilter(Builder $builder, $filters) {
+    public function scopeFilter(Builder $builder, $filters)
+    {
         $options = array_merge([ // todo searching about array_merge
-            'store_id'=> null,
-            'category_id'=> null,
-            'tag_id'=> null,
-            'status'=> 'active',
+            'store_id' => null,
+            'category_id' => null,
+            'tag_id' => null,
+            'status' => 'active',
         ], $filters);
 
         $builder->when($options['status'], function ($query, $status) {
@@ -160,6 +161,5 @@ class Product extends Model
             //     $builder->where('id', $value);
             // });
         });
-
     }
 }

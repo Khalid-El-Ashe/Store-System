@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\ProductsController;
+use App\Http\Controllers\Dashboard\ProductsController;
+use App\Http\Controllers\Dashboard\AdminContrller;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\RolesController;
+use App\Http\Controllers\Dashboard\UsersController;
 use App\Http\Middleware\CheckUserType;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Fortify;
@@ -31,6 +33,8 @@ Route::prefix('admin/dashboard')->as('dashboard.')->middleware(['auth:admin,web'
             '/products' => ProductsController::class,
             '/categories' => CategoryController::class,
             '/roles' => RolesController::class,
+            '/admins' => AdminContrller::class,
+            '/users' => UsersController::class,
         ]
     );
 

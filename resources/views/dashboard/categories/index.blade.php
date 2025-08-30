@@ -13,9 +13,9 @@
 
 <div class="mb-5">
     {{-- using the permissions in the front --}}
-    @if (Auth::user()->can('categories.create'))
+    @can('create', 'App\\Models\Category')
     <a href="{{route('dashboard.categories.create')}}" class="btn bg-olive active">Add Category</a>
-    @endif
+    @endcan
     {{-- <a href="{{route('categories.trash')}}" class="btn bg-olive active">Trashes Categories</a> --}}
 </div>
 
@@ -81,12 +81,12 @@
 
             <td>
                 <div class="btn-group">
-                    @can('categories.update')
+                    @can('update', $category)
                     <a href="{{ route('dashboard.categories.edit', $category->id) }}"
                         class="btn btn-block btn-outline-success btn-sm">Edit</a>
                     @endcan
 
-                    @can('categories.delete')
+                    @can('delete', $category)
                     <form action="{{route('dashboard.categories.destroy', $category->id)}}" method="post">
                         @csrf
                         {{-- <input type="hidden" name="_method" value="delete"> --}}

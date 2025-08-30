@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //todo this is a pivot table for many-to-many relationship between roles and users
-        // it should have role_id and user_id as foreign keys
-        // and it should have timestamps to track when the role was assigned to the user
+        /**
+         * this is a pivot table for many-to-many relationship between roles and users
+         * it should have role_id and user_id as foreign keys
+         * and it should have timestamps to track when the role was assigned to the user
+         */
         Schema::create('role_user', function (Blueprint $table) {
 
             $table->morphs('authorizable'); //todo the authurizable is the user id
+            // $table->foreignId('role_id')->constrained('roles')->restrictOnDelete();
             $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
 
             $table->primary(['authorizable_id', 'authorizable_type', 'role_id']);

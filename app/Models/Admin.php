@@ -27,4 +27,6 @@ class Admin extends Authenticatable
         'super_admin',
         'status'
     ];
+
+    
 }

@@ -13,14 +13,15 @@
 
 <div class="mb-5">
     {{-- using the permissions in the front --}}
-    @can('create', 'App\\Models\Category')
+    @can('categories.create')
     <a href="{{route('dashboard.categories.create')}}" class="btn bg-olive active">Add Category</a>
     @endcan
-    {{-- <a href="{{route('categories.trash')}}" class="btn bg-olive active">Trashes Categories</a> --}}
+    <a href="{{route('dashboard.categories.trash')}}" class="btn bg-olive active">Trashes Categories</a>
 </div>
 
 {{-- @component('components.alert') --}}
 <x-alert type="success" />
+<x-alert type="info" />
 <!--- this component i added it --->
 
 <form action="{{URL::current()}}" method="get" class="d-flex justify-content-between mb-4 mx-2">
@@ -81,12 +82,12 @@
 
             <td>
                 <div class="btn-group">
-                    @can('update', $category)
+                    @can('categories.update')
                     <a href="{{ route('dashboard.categories.edit', $category->id) }}"
                         class="btn btn-block btn-outline-success btn-sm">Edit</a>
                     @endcan
 
-                    @can('delete', $category)
+                    @can('categories.delete')
                     <form action="{{route('dashboard.categories.destroy', $category->id)}}" method="post">
                         @csrf
                         {{-- <input type="hidden" name="_method" value="delete"> --}}

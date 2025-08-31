@@ -12,7 +12,7 @@
 @section('content')
 
 {{-- <div class="mb-5">
-    <a href="{{route('categories.create')}}" class="btn bg-olive active">Add Category</a>
+    <a href="{{route('dashboard.categories.create')}}" class="btn bg-olive active">Add Category</a>
 </div> --}}
 
 {{-- @component('components.alert') --}}
@@ -73,7 +73,7 @@
 
             <td>
                 <div class="btn-group">
-                    <form action="{{route('categories.restore', $category->id)}}" method="post">
+                    <form action="{{route('dashboard.categories.restore', $category->id)}}" method="post">
                         @csrf
                         {{-- <input type="hidden" name="_method" value="delete"> --}}
                         @method('put')
@@ -82,7 +82,7 @@
                         </button>
                     </form>
 
-                    <form action="{{route('categories.force-delete', $category->id)}}" method="post">
+                    <form action="{{route('dashboard.categories.force-delete', $category->id)}}" method="post">
                         @csrf
                         {{-- <input type="hidden" name="_method" value="delete"> --}}
                         @method('delete')

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Events\OrderCreated;
+use App\Exceptions\InvalidOrderException;
 use App\Http\Controllers\Controller;
 use App\Listeners\EmptyCart;
 use App\Models\Order;
@@ -20,13 +21,16 @@ class CheckoutContrller extends Controller
     {
         // check if the cart is empty
         if ($cart->get()->count() == 0) {
-            return redirect()->route("home");
+            // return redirect()->route("home");
+            throw new InvalidOrderException('Cart is Empty');
         }
 
-        $user = Auth::user();
+        // $user = Auth::user();
         // dd($user);
 
-        return view('front.checkout', ['cart' => $cart, 'countries' => Countries::getNames()]);
+        $countries = Countries::getNames();
+
+        return view('front.checkout', compact('cart', 'countries'));
     }
 
     public function store(Request $request, CartRepository $cart)

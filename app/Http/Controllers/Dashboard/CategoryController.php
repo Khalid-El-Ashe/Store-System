@@ -25,7 +25,7 @@ class CategoryController extends Controller
         // }
 
         // if this user have this permission
-        if(!Gate::allows('categories.view')) {
+        if (!Gate::allows('categories.view')) {
             abort(403);
         }
 
@@ -68,13 +68,13 @@ class CategoryController extends Controller
     {
 
         // if this user do not have this permission
-        if(!Gate::allows('categories.create')) {
+        if (!Gate::allows('categories.create')) {
             return view('error');
         }
 
         $parents = Category::all();
         $category = new Category();
-        return view('dashboard.categories.create',compact('parents','category'));
+        return view('dashboard.categories.create', compact('parents', 'category'));
     }
 
     /**
@@ -103,7 +103,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        if(Gate::denies('categories.view')) {
+        if (Gate::denies('categories.view')) {
             abort(403, 'You do not have permission to view this category.');
         }
         return view('dashboard.categories.show', ['category' => $category]);
@@ -133,7 +133,7 @@ class CategoryController extends Controller
                 ->orWhere('parent_id', '!=', $id);
         })->get();
 
-        return view('dashboard.categories.edit', ['category' => $category, 'parents' => $parents]);
+        return view('dashboard.categories.edit', compact('category', 'parents'));
 
 
         // $parents = $categories->all();
@@ -166,26 +166,26 @@ class CategoryController extends Controller
         $category->update($data);
 
         // $category->fill($request->all())->save();
-        return redirect()->route('categories.index');
+        return redirect()->route('dashboard.categories..index');
     }
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
         Gate::authorize('categories.delete');
 
         // Category::where('id', '=', $id)->delete();
-        $category = Category::findOrFail($id);
+        // $category = Category::findOrFail($id);
         $category->delete();
 
         // if ($category->image) {
         //     Storage::disk('public')->delete($category->image);
         // }
 
-        return redirect()->route('categories.index');
+        return redirect()->route('dashboard.categories.index');
     }
 
     public function trash()
@@ -197,8 +197,10 @@ class CategoryController extends Controller
     public function restore($id)
     {
         $category = Category::onlyTrashed()->find($id); // i need to find the $id from the trashed categories
-        $category->restore();
-        return redirect()->route('categories.trash')->with('success', 'Category is Restored');
+        if ($category) {
+            Category::restore();
+        }
+        return redirect()->route('dashboard.categories.trash')->with('success', 'Category is Restored');
     }
 
     public function forceDelete($id)
@@ -209,6 +211,6 @@ class CategoryController extends Controller
         if ($category->image) {
             Storage::disk('public')->delete($category->image);
         }
-        return redirect()->route('categories.trash')->with('success', 'Category is Deleted');
+        return redirect()->route('dashboard.categories.trash')->with('success', 'Category is Deleted');
     }
 }

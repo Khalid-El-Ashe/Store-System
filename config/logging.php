@@ -58,6 +58,14 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        // now i need to make my log channel for the SQL exceptions
+        'sql' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/sql.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

@@ -33,7 +33,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 // todo LaravelLocalization::setLocale() -> this is from mcamara package
 Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
 
-    Route::get('/', [HomeContrller::class, 'index'])->middleware('auth')->name('home');
+    Route::get('/', [HomeContrller::class, 'index'])->middleware('guest')->name('home');
 
     Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
     Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show');
@@ -41,10 +41,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
     Route::get('/products/filter', [ProductsController::class, 'filter'])->name('products.filter');
 
     // Route::middleware('auth')->group(function () {
-        // Route::resource('/profile', ProfileController::class);
-        // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::resource('/profile', ProfileController::class);
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     // });
 
     Route::resource('cart', CartController::class);
@@ -61,11 +61,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
     //   echo 'Currency page';
     // });
     // Route::post('/currency-store', [CurrencyConverterController::class, 'store'])->name('currency.store');
-    Route::get('/currency', function(){
+    Route::get('/currency', function () {
         return view('layouts.front');
     });
     Route::post('/currency-store', [CurrencyConverterController::class, 'store'])->name('currency.store');
-
 });
 
 // i need to implement the routes class

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class Category extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory; //SoftDeletes; // using the SoftDeletes trait
 
     // this is to protected the elements
     protected $fillable = ['name', 'slug', 'description', 'image', 'status', 'parent_id', 'created_at', 'updated_at'];

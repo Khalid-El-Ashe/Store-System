@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Jobs\ImportProducts;
 use App\Models\Product;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
@@ -131,4 +132,5 @@ class ProductsController extends Controller
         $product = Product::findOrFail($id);
         // $this->authorize('delete', $product);
     }
+
 }

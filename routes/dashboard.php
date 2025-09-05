@@ -4,6 +4,7 @@ use App\Http\Controllers\Dashboard\ProductsController;
 use App\Http\Controllers\Dashboard\AdminContrller;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\ImportProductsController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\RolesController;
 use App\Http\Controllers\Dashboard\UsersController;
@@ -28,6 +29,9 @@ Route::prefix('admin/dashboard')->as('dashboard.')->middleware(['auth:admin,web'
     //
     // Route::resource('/categories', CategoryController::class);
     // Route::resource('/products', ProductsController::class);
+
+    Route::get('/products/import', [ImportProductsController::class, 'create'])->name('products.import.create');
+    Route::post('/products/import', [ImportProductsController::class, 'store'])->name('products.import.store');
     Route::resources(
         [
             '/products' => ProductsController::class,

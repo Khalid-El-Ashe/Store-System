@@ -1,12 +1,15 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialLoginController;
 use App\Http\Controllers\Front\Auth\TwoFactorAuthenticationContrller;
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutContrller;
 use App\Http\Controllers\Front\CurrencyConverterController;
 use App\Http\Controllers\Front\HomeContrller;
 use App\Http\Controllers\Front\ProductsController;
+use App\Http\Controllers\SocialController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -33,7 +36,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 // todo LaravelLocalization::setLocale() -> this is from mcamara package
 Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
 
-    Route::get('/', [HomeContrller::class, 'index'])->middleware('guest')->name('home');
+    Route::get('/', [HomeContrller::class, 'index'])->name('home');
 
     Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
     Route::get('/products/{product:slug}', [ProductsController::class, 'show'])->name('products.show');
@@ -65,6 +68,18 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
         return view('layouts.front');
     });
     Route::post('/currency-store', [CurrencyConverterController::class, 'store'])->name('currency.store');
+});
+
+
+//todo this routes for Socialite with Social media accounts
+Route::get('auth/{provider}/redirect', [SocialLoginController::class, 'redirect'])->name('auth.socialite.redirect');
+Route::get('auth/{provider}/callback', [SocialLoginController::class, 'callback'])->name('auth.socialite.callback');
+
+Route::get('auth/{provider}/user', [SocialController::class, 'index'])->name('auth.social.user');
+
+Route::get('wellcom', function () {
+    $username = Auth::user()->name;
+    echo 'wellocm' . $username;
 });
 
 // i need to implement the routes class

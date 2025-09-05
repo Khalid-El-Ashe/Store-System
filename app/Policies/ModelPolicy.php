@@ -16,12 +16,12 @@ class ModelPolicy
     }
 
     // i need make the before method to filter the user type
-    // public function before($user, $ability)
-    // {
-    //     if ($user->super_admin) {
-    //         return true; // Grant all permissions to super admin
-    //     }
-    // }
+    public function before($user, $ability)
+    {
+        if ($user->super_admin) {
+            return true; // Grant all permissions to super admin
+        }
+    }
 
     public function __call($method, $args)
     {

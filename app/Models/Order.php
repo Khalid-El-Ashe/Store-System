@@ -44,6 +44,12 @@ class Order extends Model
             ]);
     }
 
+    // todo i need make the relation one-to-many
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class, 'order_id');
+    }
+
     // One-To-Many Relation
     public function addresses()
     {

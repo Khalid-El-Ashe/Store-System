@@ -34,8 +34,12 @@ return [
         'api_key' => env('CURRENY_CONVERTER_API_KEY'),
         'base_url' => 'https://free.currencyconverterapi.com/api/v7',
     ],
-    'strip' => [],
-    //this service for the socialite Login
+    // this array for payments
+    'stripe' => [
+        'publishable_key'=> env('STRIPE_PUBLISHABLE_KEY'),
+        'secret_key' => env('STRIPE_SECRET_KEY')
+    ],
+    // this service for the socialite Login
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
@@ -45,5 +49,5 @@ return [
         'client_id' => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
         'redirect' => env('APP_URL') . '/auth/facebook/callback'
-    ]
+    ],
 ];

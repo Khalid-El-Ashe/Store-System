@@ -22,6 +22,6 @@ class OrderItem extends Pivot // this model i a model PivotTable so i need to ex
     }
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class, 'order_id');
     }
 }

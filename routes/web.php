@@ -6,6 +6,7 @@ use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutContrller;
 use App\Http\Controllers\Front\CurrencyConverterController;
 use App\Http\Controllers\Front\HomeContrller;
+use App\Http\Controllers\Front\PaymentController;
 use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\SocialController;
 use Illuminate\Http\Request;
@@ -72,15 +73,15 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function () {
 
 
 //todo this routes for Socialite with Social media accounts
-Route::get('auth/{provider}/redirect', [SocialLoginController::class, 'redirect'])->name('auth.socialite.redirect');
-Route::get('auth/{provider}/callback', [SocialLoginController::class, 'callback'])->name('auth.socialite.callback');
+Route::get('/auth/{provider}/redirect', [SocialLoginController::class, 'redirect'])->name('auth.socialite.redirect');
+Route::get('/auth/{provider}/callback', [SocialLoginController::class, 'callback'])->name('auth.socialite.callback');
 
-Route::get('auth/{provider}/user', [SocialController::class, 'index'])->name('auth.social.user');
+Route::get('/auth/{provider}/user', [SocialController::class, 'index'])->name('auth.social.user');
 
-Route::get('wellcom', function () {
-    $username = Auth::user()->name;
-    echo 'wellocm' . $username;
-});
+// todo payment route
+Route::get('/orders/{order}/pay', action: [PaymentController::class, 'create'])->name('orders.payment.create');
+Route::post('/orders/{order}/stripe/payment-intent', action: [PaymentController::class, 'createStripePaymentIntent'])->name('stripe.paymentIntent.create');
+Route::get('/orders/{order}/pay/stripe/callback', [PaymentController::class, 'confirm'])->name('stripe.return.url');
 
 // i need to implement the routes class
 // require __DIR__ . '/auth.php';

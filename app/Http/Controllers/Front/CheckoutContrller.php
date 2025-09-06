@@ -90,6 +90,6 @@ class CheckoutContrller extends Controller
             throw $e;
             // return response()->json(['message', $e->getMessage()], 500);
         }
-        // return redirect()->route('home')->with('success', 'is ordered');
+        return redirect()->route('orders.payment.create', $order->id);
     }
 }
